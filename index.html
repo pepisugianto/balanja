@@ -174,15 +174,20 @@
         .btn:active { transform: scale(0.95); }
 
         .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
         .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: var(--success-dark); }
         .btn-warning { background: var(--warning); color: white; }
+        .btn-warning:hover { background: var(--warning-dark); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-excel { background: var(--excel); color: white; }
+        .btn-excel:hover { background: var(--excel-dark); }
         .btn-outline {
             background: white;
             color: var(--text-medium);
             border: 1px solid #cbd5e1;
         }
+        .btn-outline:hover { background: #f8fafc; }
 
         /* === MANUAL FORM COMPACT === */
         .manual-form {
@@ -795,8 +800,26 @@
         <span class="progress-count" id="progressCount">0/0</span>
     </div>
 
-    <!-- Toolbar Compact dengan Label -->
+    <!-- Toolbar Compact dengan Urutan Baru -->
+    <!-- Urutan: Template → Excel → Bahan → Simpan → Baru → PDF → XLS -->
     <div class="toolbar">
+        <!-- GROUP 1: Template, Excel, Bahan -->
+        <div class="toolbar-group">
+            <button class="btn btn-outline" onclick="downloadTemplate()" title="Download Template Excel">
+                <i class="ti-download"></i> Template
+            </button>
+            <label for="fileInput" class="btn btn-excel" style="margin:0; cursor:pointer;" title="Import dari Excel">
+                <i class="ti-import"></i> Excel
+                <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;" onchange="handleFileUpload(event)">
+            </label>
+            <button class="btn btn-warning" onclick="toggleManualForm()" title="Tambah bahan">
+                <i class="ti-plus"></i> Bahan
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <!-- GROUP 2: Simpan, Baru -->
         <div class="toolbar-group">
             <button class="btn btn-primary" onclick="saveToLocal()" title="Simpan data">
                 <i class="ti-save"></i> Simpan
@@ -808,32 +831,13 @@
 
         <div class="toolbar-separator"></div>
 
+        <!-- GROUP 3: PDF, XLS -->
         <div class="toolbar-group">
             <button class="btn btn-success" onclick="exportPDF()" title="Ekspor ke PDF">
                 <i class="ti-receipt"></i> PDF
             </button>
             <button class="btn btn-success" onclick="exportExcel()" title="Ekspor ke Excel">
                 <i class="ti-layout-grid2"></i> XLS
-            </button>
-        </div>
-
-        <div class="toolbar-separator"></div>
-
-        <div class="toolbar-group">
-            <button class="btn btn-outline" onclick="downloadTemplate()" title="Download Template Excel">
-                <i class="ti-download"></i> Template
-            </button>
-            <label for="fileInput" class="btn btn-excel" style="margin:0; cursor:pointer;" title="Import dari Excel">
-                <i class="ti-import"></i> Excel
-                <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;" onchange="handleFileUpload(event)">
-            </label>
-        </div>
-
-        <div class="toolbar-separator"></div>
-
-        <div class="toolbar-group">
-            <button class="btn btn-warning" onclick="toggleManualForm()" title="Tambah bahan">
-                <i class="ti-plus"></i> Bahan
             </button>
         </div>
     </div>
@@ -1065,7 +1069,6 @@
             const savedRab = localStorage.getItem(STORAGE_RAB_KEY);
             if (saved) {
                 items = JSON.parse(saved);
-                // Pastikan semua item punya field `bought`
                 items.forEach(item => {
                     if (item.bought === undefined) item.bought = false;
                 });
@@ -1615,7 +1618,6 @@
             },
             margin: { top: 32, left: 14, right: 14 },
             didParseCell: function(data) {
-                // Warnai baris yang sudah dibeli
                 if (data.section === 'body' && items[data.row.index] && items[data.row.index].bought) {
                     data.cell.styles.fillColor = [236, 253, 245];
                     data.cell.styles.textColor = [107, 114, 128];
