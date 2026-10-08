@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimasi Belanja Praktik</title>
+    
+    <!-- Google Fonts: Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Themify Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css">
+    
+    <!-- SheetJS untuk Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- jsPDF untuk PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <style>
+        /* === VARIABEL KONSISTEN === */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --warning: #eab308;
+            --warning-dark: #ca8a04;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --table-header-bg: #f8fafc;
+            --table-row-hover: #f8fafc;
+            
+            --text-dark: #1e293b;
+            --text-medium: #475569;
+            --text-light: #94a3b8;
+            
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+            
+            --fs-xs: 11px;
+            --fs-sm: 12px;
+            --fs-base: 13px;
+            --fs-md: 14px;
+            --fs-lg: 16px;
+            --fs-xl: 18px;
+            --fs-2xl: 22px;
+            --fs-3xl: 28px;
+            
+            --fw-normal: 400;
+            --fw-medium: 600;
+            --fw-bold: 700;
+            --fw-black: 800;
+            
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-dark);
+            font-size: var(--fs-base);
+            line-height: 1.5;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        /* === HEADER === */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 22px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: var(--fs-2xl);
+            font-weight: var(--fw-black);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 .icon {
+            font-size: var(--fs-2xl);
+        }
+
+        .header-info {
+            font-size: var(--fs-sm);
+            font-weight: var(--fw-medium);
+            opacity: 0.9;
+            text-align: right;
+        }
+
+        /* === TOOLBAR === */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 16px 28px;
+            background: var(--table-header-bg);
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: var(--border-dark);
+            margin: 0 4px;
+        }
+
+        /* === BUTTONS === */
+        .btn {
+            padding: 9px 14px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--fs-base);
+            font-weight: var(--fw-bold);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            white-space: nowrap;
+            line-height: 1;
+        }
+
+        .btn:active { transform: scale(0.97); }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: var(--success-dark); }
+
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-warning:hover { background: var(--warning-dark); }
+
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: var(--danger-dark); }
+
+        .btn-outline {
+            background: white;
+            color: var(--text-medium);
+            border: 1px solid var(--border-dark);
+        }
+        .btn-outline:hover { background: var(--table-row-hover); border-color: var(--text-light); }
+
+        /* === MANUAL FORM === */
+        .manual-form {
+            display: none;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 16px 28px;
+            background: #fffbeb;
+            border-bottom: 1px solid #fde68a;
+            align-items: center;
+            animation: slideDown 0.25s ease;
+        }
+
+        .manual-form.show { display: flex; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .manual-form input {
+            padding: 9px 12px;
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-md);
+            font-size: var(--fs-base);
+            font-family: inherit;
+            font-weight: var(--fw-medium);
+            color: var(--text-dark);
+            transition: border 0.2s;
+        }
+
+        .manual-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        .manual-form input[type="text"] { flex: 1; min-width: 180px; }
+        .manual-form input[type="number"] { width: 110px; }
+
+        /* === TABLE WRAPPER === */
+        .table-wrapper {
+            padding: 0 28px 28px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            min-width: 700px;
+        }
+
+        th, td {
+            padding: 12px 8px;
+            text-align: center;
+            font-size: var(--fs-base);
+            border-bottom: 1px solid var(--border);
+        }
+
+        thead th {
+            background: var(--table-header-bg);
+            color: var(--text-medium);
+            font-weight: var(--fw-bold);
+            font-size: var(--fs-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 2px solid var(--primary);
+            padding: 12px 8px;
+        }
+
+        tbody tr { transition: background-color 0.15s; }
+        tbody tr:hover { background: var(--table-row-hover); }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 40px;
+            color: var(--text-light);
+            font-size: var(--fs-sm);
+            font-weight: var(--fw-medium);
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            text-align: left;
+            font-weight: var(--fw-bold);
+            color: var(--text-dark);
+            max-width: 220px;
+            font-size: var(--fs-base);
+            padding-left: 12px;
+        }
+
+        th:nth-child(3), td:nth-child(3) { width: 80px; }
+        th:nth-child(4), td:nth-child(4) { width: 130px; }
+        th:nth-child(5), td:nth-child(5) { width: 130px; }
+        th:nth-child(6), td:nth-child(6) { width: 90px; }
+
+        /* === INPUT TRIGGER === */
+        .input-trigger {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #f1f5f9;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            font-size: var(--fs-base);
+            font-weight: var(--fw-bold);
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.15s;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .input-trigger:hover {
+            background: #e2e8f0;
+            border-color: var(--primary);
+        }
+
+        .input-trigger.price-trigger {
+            color: var(--success-dark);
+            background: #f0fdf4;
+        }
+
+        .input-trigger.price-trigger:hover {
+            background: #dcfce7;
+            border-color: var(--success);
+        }
+
+        /* === CURRENCY === */
+        .currency {
+            white-space: nowrap;
+            font-family: 'Courier New', monospace;
+            font-weight: var(--fw-bold);
+            color: var(--text-dark);
+            font-size: var(--fs-base);
+        }
+
+        /* === TOTAL ROW === */
+        .total-row {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .total-row td {
+            padding: 16px 10px;
+            font-weight: var(--fw-black);
+            font-size: var(--fs-md);
+            color: var(--success-dark);
+            border-top: 2px solid var(--success);
+            border-bottom: none;
+        }
+
+        #grandTotal {
+            font-size: var(--fs-xl);
+            color: var(--danger);
+            font-family: 'Courier New', monospace;
+            font-weight: var(--fw-black);
+        }
+
+        /* === RAB ROW === */
+        .rab-row {
+            background: #fef3c7;
+        }
+
+        .rab-row td {
+            padding: 14px 10px;
+            font-weight: var(--fw-black);
+            font-size: var(--fs-md);
+            color: var(--warning-dark);
+            border-top: 1px solid #fde68a;
+            border-bottom: none;
+        }
+
+        .rab-input-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            border: 2px solid #fcd34d;
+            border-radius: var(--radius-md);
+            padding: 4px 12px;
+            transition: border-color 0.2s;
+        }
+
+        .rab-input-wrapper:focus-within {
+            border-color: var(--warning-dark);
+            box-shadow: 0 0 0 3px rgba(234,179,8,0.15);
+        }
+
+        .rab-input-wrapper .prefix {
+            font-size: var(--fs-sm);
+            font-weight: var(--fw-bold);
+            color: var(--warning-dark);
+            font-family: 'Courier New', monospace;
+        }
+
+        #rabInput {
+            border: none;
+            outline: none;
+            font-size: var(--fs-md);
+            font-weight: var(--fw-black);
+            color: var(--warning-dark);
+            font-family: 'Courier New', monospace;
+            width: 130px;
+            text-align: right;
+            background: transparent;
+            padding: 4px 0;
+        }
+
+        /* === SELISIH ROW === */
+        .selisih-row {
+            background: #f8fafc;
+        }
+
+        .selisih-row td {
+            padding: 14px 10px;
+            font-weight: var(--fw-bold);
+            font-size: var(--fs-base);
+            color: var(--text-medium);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        #selisihValue {
+            font-size: var(--fs-lg);
+            font-family: 'Courier New', monospace;
+            font-weight: var(--fw-black);
+        }
+
+        #selisihValue.aman { color: var(--success-dark); }
+        #selisihValue.lebih { color: var(--danger); }
+
+        /* === STATUS BADGE === */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: var(--fs-sm);
+            font-weight: var(--fw-black);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.aman {
+            background: #dcfce7;
+            color: var(--success-dark);
+        }
+
+        .status-badge.lebih {
+            background: #fee2e2;
+            color: var(--danger-dark);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* === WARNING BANNER === */
+        .warning-banner {
+            display: none;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-bottom: 1px solid #fca5a5;
+            color: var(--danger-dark);
+            font-size: var(--fs-md);
+            font-weight: var(--fw-bold);
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .warning-banner.show { display: flex; }
+
+        .warning-banner .icon {
+            font-size: var(--fs-xl);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        /* === ACTION CELL === */
+        .action-cell {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: none;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--fs-lg);
+            line-height: 1;
+            transition: all 0.15s;
+        }
+
+        .btn-edit { color: var(--warning); }
+        .btn-edit:hover { background: #fef9c3; transform: scale(1.1); }
+
+        .btn-trash { color: var(--text-light); }
+        .btn-trash:hover { background: #fee2e2; color: var(--danger); transform: scale(1.1); }
+
+        /* === MODAL === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+            animation: fadeIn 0.2s ease;
+            padding: 16px;
+        }
+
+        .modal.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-box {
+            background: white;
+            padding: 28px;
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 380px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            animation: slideUp 0.25s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: var(--fs-lg);
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            font-weight: var(--fw-black);
+        }
+
+        .modal-subtitle {
+            font-size: var(--fs-base);
+            color: var(--text-light);
+            margin-bottom: 18px;
+            font-weight: var(--fw-medium);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 16px;
+            font-size: var(--fs-3xl);
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-weight: var(--fw-black);
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.2s;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+            padding: 13px;
+            font-size: var(--fs-md);
+            justify-content: center;
+        }
+
+        /* === EDIT FORM GROUP === */
+        .edit-form-group {
+            text-align: left;
+            margin-bottom: 14px;
+        }
+
+        .edit-form-group label {
+            display: block;
+            font-size: var(--fs-sm);
+            font-weight: var(--fw-bold);
+            color: var(--text-medium);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .edit-form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: var(--fs-md);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-weight: var(--fw-medium);
+            color: var(--text-dark);
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .edit-form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+
+        .edit-form-group input.price-field {
+            font-family: 'Courier New', monospace;
+            font-weight: var(--fw-bold);
+            color: var(--success-dark);
+        }
+
+        /* === CONFIRM MODAL === */
+        .confirm-modal .modal-box {
+            max-width: 420px;
+            text-align: left;
+        }
+
+        .confirm-modal .modal-title {
+            font-size: var(--fs-xl);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .confirm-modal .modal-title .icon {
+            font-size: var(--fs-2xl);
+        }
+
+        .confirm-modal .modal-message {
+            font-size: var(--fs-md);
+            color: var(--text-medium);
+            line-height: 1.6;
+            margin-bottom: 22px;
+            font-weight: var(--fw-medium);
+        }
+
+        .confirm-modal .modal-message strong {
+            color: var(--danger);
+            font-weight: var(--fw-bold);
+        }
+
+        /* === TOAST === */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-dark);
+            color: white;
+            padding: 14px 24px;
+            border-radius: var(--radius-lg);
+            font-size: var(--fs-md);
+            font-weight: var(--fw-bold);
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: var(--success-dark); }
+        .toast.error { background: var(--danger); }
+        .toast.info { background: var(--primary); }
+        .toast.warning { background: var(--warning-dark); }
+
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .empty-state .title {
+            font-size: var(--fs-lg);
+            font-weight: var(--fw-bold);
+            color: var(--text-medium);
+            margin-bottom: 6px;
+        }
+
+        .empty-state .subtitle {
+            font-size: var(--fs-base);
+            font-weight: var(--fw-medium);
+        }
+
+        .empty-state .btn {
+            margin-top: 20px;
+        }
+
+        /* === RESPONSIVE MOBILE - TETAP HORIZONTAL === */
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .container { border-radius: 0; }
+            
+            .header { padding: 16px 18px; }
+            .header h1 { font-size: var(--fs-xl); }
+            .header h1 .icon { font-size: var(--fs-xl); }
+            .header-info { font-size: var(--fs-xs); }
+
+            .toolbar {
+                padding: 12px 16px;
+                justify-content: center;
+            }
+            
+            .toolbar-separator { display: none; }
+            
+            .btn {
+                padding: 9px 12px;
+                font-size: var(--fs-md);
+            }
+
+            .table-wrapper {
+                padding: 0 12px 20px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 720px;
+            }
+
+            th, td { 
+                padding: 10px 6px; 
+                font-size: var(--fs-sm);
+            }
+            
+            thead th { 
+                font-size: var(--fs-xs);
+                padding: 10px 6px;
+            }
+
+            th:nth-child(2), td:nth-child(2) {
+                max-width: 180px;
+                font-size: var(--fs-sm);
+            }
+            
+            .input-trigger { 
+                padding: 6px 8px; 
+                font-size: var(--fs-sm);
+                min-width: 40px;
+            }
+
+            .currency { font-size: var(--fs-sm); }
+            
+            .manual-form {
+                padding: 14px 16px;
+                flex-direction: column;
+            }
+            .manual-form input { width: 100% !important; }
+            .manual-form .btn { width: 100%; justify-content: center; }
+            
+            .total-row td { 
+                padding: 14px 8px; 
+                font-size: var(--fs-sm); 
+            }
+            #grandTotal { font-size: var(--fs-base); }
+
+            .rab-row td { 
+                padding: 12px 8px; 
+                font-size: var(--fs-sm); 
+            }
+            .rab-input-wrapper { padding: 3px 8px; }
+            #rabInput { 
+                width: 100px; 
+                font-size: var(--fs-sm);
+            }
+
+            .selisih-row td { 
+                padding: 12px 8px; 
+                font-size: var(--fs-xs); 
+            }
+            #selisihValue { font-size: var(--fs-sm); }
+
+            .status-badge { 
+                padding: 4px 10px; 
+                font-size: 10px; 
+            }
+
+            .warning-banner { 
+                padding: 12px 16px; 
+                font-size: var(--fs-sm); 
+            }
+
+            .action-cell { 
+                flex-direction: row; 
+                gap: 2px; 
+            }
+            .btn-action { 
+                padding: 4px 6px; 
+                font-size: var(--fs-md); 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+            }
+            .header-info { 
+                text-align: left; 
+                width: 100%; 
+            }
+
+            .btn .btn-text {
+                display: none;
+            }
+
+            table {
+                min-width: 680px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>
+            <span class="icon"><i class="ti-shopping-cart"></i></span>
+            Estimasi Belanja Praktik
+        </h1>
+        <div class="header-info">
+            <div id="lastSaved">Belum disimpan</div>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <button class="btn btn-primary" onclick="saveToLocal()" title="Simpan ke penyimpanan lokal">
+                <i class="ti-save"></i><span class="btn-text">Simpan</span>
+            </button>
+            <button class="btn btn-outline" onclick="newData()" title="Buat data baru">
+                <i class="ti-file"></i><span class="btn-text">Baru</span>
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <div class="toolbar-group">
+            <button class="btn btn-success" onclick="exportPDF()" title="Ekspor ke PDF">
+                <i class="ti-receipt"></i><span class="btn-text">PDF</span>
+            </button>
+            <button class="btn btn-success" onclick="exportExcel()" title="Ekspor ke Excel">
+                <i class="ti-layout-grid2"></i><span class="btn-text">Excel</span>
+            </button>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <div class="toolbar-group">
+            <button class="btn btn-outline" onclick="downloadTemplate()" title="Download template Excel">
+                <i class="ti-download"></i>
+            </button>
+            <label for="fileInput" class="btn btn-outline" style="margin:0; cursor:pointer;" title="Import dari Excel">
+                <i class="ti-upload"></i>
+                <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;" onchange="handleFileUpload(event)">
+            </label>
+        </div>
+
+        <div class="toolbar-separator"></div>
+
+        <div class="toolbar-group">
+            <button class="btn btn-warning" onclick="toggleManualForm()" title="Tambah bahan manual">
+                <i class="ti-plus"></i><span class="btn-text">Tambah Bahan</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Form Tambah Manual -->
+    <div id="manualForm" class="manual-form">
+        <input type="text" id="newName" placeholder="Nama Bahan">
+        <input type="number" id="newQty" placeholder="Jumlah" min="0" value="1">
+        <input type="number" id="newPrice" placeholder="Harga Satuan" min="0" value="0">
+        <button class="btn btn-success" onclick="addManualData()"><i class="ti-check"></i> Simpan</button>
+        <button class="btn btn-outline" onclick="toggleManualForm()"><i class="ti-close"></i> Batal</button>
+    </div>
+
+    <!-- Warning Banner -->
+    <div class="warning-banner" id="warningBanner">
+        <span class="icon"><i class="ti-alert"></i></span>
+        <span>PERHATIAN: Total estimasi telah <strong>MELEBIHI</strong> anggaran RAB! Segera tinjau kembali daftar belanja Anda.</span>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table id="priceTable">
+            <thead>
+                <tr>
+                    <th rowspan="2">No</th>
+                    <th rowspan="2">Nama Bahan</th>
+                    <th rowspan="2">Jumlah</th>
+                    <th colspan="2">Harga</th>
+                    <th rowspan="2">Aksi</th>
+                </tr>
+                <tr>
+                    <th>Satuan</th>
+                    <th>Jumlah</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data diisi JavaScript (kosong secara default) -->
+            </tbody>
+            <tfoot>
+                <!-- Total Estimasi -->
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right; padding-right: 20px;">TOTAL ESTIMASI</td>
+                    <td id="grandTotal">Rp 0</td>
+                    <td></td>
+                </tr>
+                <!-- Anggaran RAB -->
+                <tr class="rab-row">
+                    <td colspan="4" style="text-align: right; padding-right: 20px;">
+                        <i class="ti-wallet" style="margin-right:6px;"></i>ANGGARAN RAB
+                    </td>
+                    <td colspan="2" style="text-align: left; padding-left: 10px;">
+                        <div class="rab-input-wrapper">
+                            <span class="prefix">Rp</span>
+                            <input type="text" id="rabInput" inputmode="numeric" placeholder="0" value="0">
+                        </div>
+                    </td>
+                </tr>
+                <!-- Selisih -->
+                <tr class="selisih-row">
+                    <td colspan="4" style="text-align: right; padding-right: 20px;">
+                        <i class="ti-stats-up" style="margin-right:6px;"></i>SELISIH
+                    </td>
+                    <td colspan="2" style="text-align: left; padding-left: 10px;">
+                        <span id="selisihValue">Rp 0</span>
+                        <span id="statusBadge" class="status-badge aman" style="margin-left: 10px;">
+                            <i class="ti-check"></i> AMAN
+                        </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Input Angka -->
+<div class="modal" id="inputModal">
+    <div class="modal-box">
+        <div class="modal-title" id="modalTitle">Edit Jumlah</div>
+        <div class="modal-subtitle" id="modalSubtitle">Nama Bahan</div>
+        <input type="text" id="modalInput" class="modal-input" inputmode="numeric">
+        <div class="modal-buttons">
+            <button class="btn btn-outline" onclick="closeModal()">Batal</button>
+            <button class="btn btn-primary" onclick="saveModal()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Bahan -->
+<div class="modal" id="editModal">
+    <div class="modal-box" style="max-width:420px; text-align:left;">
+        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><i class="ti-pencil" style="color:var(--warning);"></i> Edit Bahan</div>
+        <div class="modal-subtitle" id="editModalSubtitle" style="text-align:left;">Ubah detail bahan</div>
+        
+        <div class="edit-form-group">
+            <label for="editName">Nama Bahan</label>
+            <input type="text" id="editName" placeholder="Nama bahan">
+        </div>
+        
+        <div class="edit-form-group">
+            <label for="editQty">Jumlah</label>
+            <input type="number" id="editQty" min="0" placeholder="0" inputmode="numeric">
+        </div>
+        
+        <div class="edit-form-group">
+            <label for="editPrice">Harga Satuan (Rp)</label>
+            <input type="text" id="editPrice" class="price-field" placeholder="0" inputmode="numeric">
+        </div>
+        
+        <div class="modal-buttons" style="margin-top: 20px;">
+            <button class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+            <button class="btn btn-primary" onclick="saveEditModal()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi -->
+<div class="modal confirm-modal" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-title">
+            <span class="icon"><i class="ti-alert" style="color:var(--warning);"></i></span>
+            <span id="confirmTitleText">Konfirmasi</span>
+        </div>
+        <div class="modal-message" id="confirmMessage">
+            Apakah Anda yakin?
+        </div>
+        <div class="modal-buttons">
+            <button class="btn btn-outline" onclick="closeConfirm()">Batal</button>
+            <button class="btn btn-danger" id="confirmOkBtn" onclick="confirmOk()">Ya, Lanjutkan</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ==================== DATA ====================
+    const STORAGE_KEY = 'estimasi_belanja_data';
+    const STORAGE_TIME_KEY = 'estimasi_belanja_saved_at';
+    const STORAGE_RAB_KEY = 'estimasi_belanja_rab';
+
+    // Data awal KOSONG
+    let items = [];
+    let rabValue = 0;
+    let currentEditIndex = null;
+    let currentEditType = null;
+    let currentEditItemIndex = null;
+    let confirmCallback = null;
+    let lastWarningState = null;
+
+    // ==================== ELEMEN ====================
+    const tableBody = document.getElementById("tableBody");
+    const grandTotalElement = document.getElementById("grandTotal");
+    const rabInput = document.getElementById('rabInput');
+    const selisihValue = document.getElementById('selisihValue');
+    const statusBadge = document.getElementById('statusBadge');
+    const warningBanner = document.getElementById('warningBanner');
+    const fileInput = document.getElementById('fileInput');
+    const modal = document.getElementById('inputModal');
+    const modalInput = document.getElementById('modalInput');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+    const editModal = document.getElementById('editModal');
+    const editName = document.getElementById('editName');
+    const editQty = document.getElementById('editQty');
+    const editPrice = document.getElementById('editPrice');
+    const editModalSubtitle = document.getElementById('editModalSubtitle');
+    const confirmModal = document.getElementById('confirmModal');
+    const toast = document.getElementById('toast');
+    const lastSavedEl = document.getElementById('lastSaved');
+
+    // ==================== UTILITAS ====================
+    function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+        }).format(angka).replace("Rp", "Rp ");
+    }
+
+    function formatNumber(num) {
+        if (num === "" || num === null || isNaN(num)) return "";
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function parseNumber(str) {
+        if (!str) return 0;
+        const cleaned = str.toString().replace(/\./g, '');
+        return parseInt(cleaned) || 0;
+    }
+
+    function showToast(message, type = 'info') {
+        toast.textContent = message;
+        toast.className = 'toast show ' + type;
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // ==================== LOCAL STORAGE ====================
+    function saveToLocal(silent = false) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+            localStorage.setItem(STORAGE_RAB_KEY, rabValue.toString());
+            const now = new Date();
+            const timeStr = now.toLocaleString('id-ID', {
+                day: '2-digit', month: 'short', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+            localStorage.setItem(STORAGE_TIME_KEY, timeStr);
+            lastSavedEl.textContent = 'Tersimpan: ' + timeStr;
+            if (!silent) showToast('Data berhasil disimpan', 'success');
+            return true;
+        } catch (e) {
+            showToast('Gagal menyimpan data', 'error');
+            return false;
+        }
+    }
+
+    function loadFromLocal() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            const savedTime = localStorage.getItem(STORAGE_TIME_KEY);
+            const savedRab = localStorage.getItem(STORAGE_RAB_KEY);
+            if (saved) {
+                items = JSON.parse(saved);
+                if (savedTime) lastSavedEl.textContent = 'Tersimpan: ' + savedTime;
+                if (savedRab) {
+                    rabValue = parseInt(savedRab) || 0;
+                    rabInput.value = formatNumber(rabValue);
+                }
+                return true;
+            }
+        } catch (e) {
+            console.error('Gagal memuat data:', e);
+        }
+        return false;
+    }
+
+    // ==================== RENDER ====================
+    function renderTable() {
+        tableBody.innerHTML = "";
+        let grandTotal = 0;
+
+        // Jika tidak ada data, tampilkan empty state
+        if (items.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="padding: 0; border: none;">
+                        <div class="empty-state">
+                            <div class="icon"><i class="ti-shopping-cart"></i></div>
+                            <div class="title">Belum Ada Data Bahan</div>
+                            <div class="subtitle">Klik "Tambah Bahan" atau import dari Excel untuk memulai</div>
+                            <button class="btn btn-warning" onclick="toggleManualForm()" style="margin-top: 20px;">
+                                <i class="ti-plus"></i> Tambah Bahan Pertama
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            grandTotalElement.textContent = formatRupiah(0);
+            updateComparison(0);
+            return;
+        }
+
+        items.sort((a, b) => a.no - b.no);
+
+        items.forEach((item, index) => {
+            const rowTotal = item.qty * item.price;
+            grandTotal += rowTotal;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${item.no}</td>
+                <td>${item.name}</td>
+                <td>
+                    <span class="input-trigger" onclick="openModal(${index}, 'qty')">${item.qty}</span>
+                </td>
+                <td>
+                    <span class="input-trigger price-trigger" onclick="openModal(${index}, 'price')">${formatNumber(item.price)}</span>
+                </td>
+                <td class="currency">${formatRupiah(rowTotal)}</td>
+                <td>
+                    <div class="action-cell">
+                        <button class="btn-action btn-edit" onclick="openEditModal(${index})" title="Edit bahan"><i class="ti-pencil"></i></button>
+                        <button class="btn-action btn-trash" onclick="deleteItem(${index})" title="Hapus"><i class="ti-trash"></i></button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        grandTotalElement.textContent = formatRupiah(grandTotal);
+        updateComparison(grandTotal);
+    }
+
+    // ==================== COMPARISON LOGIC ====================
+    function updateComparison(grandTotal) {
+        const selisih = rabValue - grandTotal;
+        const isOver = grandTotal > rabValue && rabValue > 0;
+        const isEqual = grandTotal === rabValue && rabValue > 0;
+
+        if (rabValue === 0) {
+            selisihValue.textContent = 'Rp 0';
+            selisihValue.className = '';
+            statusBadge.className = 'status-badge aman';
+            statusBadge.innerHTML = '<i class="ti-info-alt"></i> RAB BELUM DISET';
+            warningBanner.classList.remove('show');
+            lastWarningState = null;
+            return;
+        }
+
+        selisihValue.textContent = formatRupiah(Math.abs(selisih));
+
+        if (isOver) {
+            selisihValue.className = 'lebih';
+            statusBadge.className = 'status-badge lebih';
+            statusBadge.innerHTML = '<i class="ti-alert"></i> MELEBIHI';
+            warningBanner.classList.add('show');
+
+            if (lastWarningState !== 'over') {
+                showToast('Total estimasi melebihi anggaran RAB!', 'error');
+                lastWarningState = 'over';
+            }
+        } else if (isEqual) {
+            selisihValue.className = 'aman';
+            statusBadge.className = 'status-badge aman';
+            statusBadge.innerHTML = '<i class="ti-check"></i> PAS';
+            warningBanner.classList.remove('show');
+            lastWarningState = 'equal';
+        } else {
+            selisihValue.className = 'aman';
+            statusBadge.className = 'status-badge aman';
+            statusBadge.innerHTML = '<i class="ti-check"></i> AMAN';
+            warningBanner.classList.remove('show');
+            lastWarningState = 'safe';
+        }
+    }
+
+    rabInput.addEventListener('input', function() {
+        const cursorPos = this.selectionStart;
+        const oldLength = this.value.length;
+        const rawValue = this.value.replace(/\./g, '');
+
+        if (rawValue === '') {
+            this.value = '';
+            rabValue = 0;
+        } else {
+            const num = parseInt(rawValue) || 0;
+            this.value = formatNumber(num);
+            rabValue = num;
+        }
+
+        const newLength = this.value.length;
+        const newPos = cursorPos + (newLength - oldLength);
+        this.setSelectionRange(newPos, newPos);
+
+        let grandTotal = 0;
+        items.forEach(item => grandTotal += item.qty * item.price);
+        updateComparison(grandTotal);
+    });
+
+    rabInput.addEventListener('blur', function() {
+        saveToLocal(true);
+    });
+
+    // ==================== MODAL INPUT ANGKA ====================
+    function openModal(index, type) {
+        currentEditIndex = index;
+        currentEditType = type;
+        const item = items[index];
+
+        if (type === 'qty') {
+            modalTitle.textContent = 'Edit Jumlah';
+            modalSubtitle.textContent = item.name;
+            modalInput.value = item.qty;
+            modalInput.setAttribute('placeholder', 'Masukkan jumlah');
+        } else {
+            modalTitle.textContent = 'Edit Harga Satuan';
+            modalSubtitle.textContent = item.name;
+            modalInput.value = formatNumber(item.price);
+            modalInput.setAttribute('placeholder', 'Masukkan harga');
+        }
+
+        modal.classList.add('active');
+        setTimeout(() => {
+            modalInput.focus();
+            modalInput.select();
+        }, 100);
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        currentEditIndex = null;
+        currentEditType = null;
+        modalInput.value = '';
+    }
+
+    function saveModal() {
+        if (currentEditIndex === null) return;
+        const newValue = parseNumber(modalInput.value);
+
+        if (currentEditType === 'qty') {
+            items[currentEditIndex].qty = newValue;
+        } else {
+            items[currentEditIndex].price = newValue;
+        }
+
+        closeModal();
+        renderTable();
+        saveToLocal(true);
+        showToast('Perubahan disimpan', 'success');
+    }
+
+    modalInput.addEventListener('input', function() {
+        if (currentEditType === 'price') {
+            const cursorPos = this.selectionStart;
+            const oldLength = this.value.length;
+            const rawValue = this.value.replace(/\./g, '');
+
+            if (rawValue === '') {
+                this.value = '';
+            } else {
+                const num = parseInt(rawValue) || 0;
+                this.value = formatNumber(num);
+            }
+
+            const newLength = this.value.length;
+            const newPos = cursorPos + (newLength - oldLength);
+            this.setSelectionRange(newPos, newPos);
+        }
+    });
+
+    modalInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); saveModal(); }
+        else if (e.key === 'Escape') closeModal();
+    });
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+    });
+
+    // ==================== MODAL EDIT BAHAN ====================
+    function openEditModal(index) {
+        currentEditItemIndex = index;
+        const item = items[index];
+
+        editModalSubtitle.textContent = 'Mengedit: ' + item.name;
+        editName.value = item.name;
+        editQty.value = item.qty;
+        editPrice.value = formatNumber(item.price);
+
+        editModal.classList.add('active');
+        setTimeout(() => {
+            editName.focus();
+            editName.select();
+        }, 100);
+    }
+
+    function closeEditModal() {
+        editModal.classList.remove('active');
+        currentEditItemIndex = null;
+        editName.value = '';
+        editQty.value = '';
+        editPrice.value = '';
+    }
+
+    function saveEditModal() {
+        if (currentEditItemIndex === null) return;
+
+        const newName = editName.value.trim();
+        const newQty = parseInt(editQty.value) || 0;
+        const newPrice = parseNumber(editPrice.value);
+
+        if (!newName) {
+            showToast('Nama bahan tidak boleh kosong!', 'error');
+            editName.focus();
+            return;
+        }
+
+        items[currentEditItemIndex].name = newName;
+        items[currentEditItemIndex].qty = newQty;
+        items[currentEditItemIndex].price = newPrice;
+
+        closeEditModal();
+        renderTable();
+        saveToLocal(true);
+        showToast('Bahan berhasil diperbarui', 'success');
+    }
+
+    editPrice.addEventListener('input', function() {
+        const cursorPos = this.selectionStart;
+        const oldLength = this.value.length;
+        const rawValue = this.value.replace(/\./g, '');
+
+        if (rawValue === '') {
+            this.value = '';
+        } else {
+            const num = parseInt(rawValue) || 0;
+            this.value = formatNumber(num);
+        }
+
+        const newLength = this.value.length;
+        const newPos = cursorPos + (newLength - oldLength);
+        this.setSelectionRange(newPos, newPos);
+    });
+
+    editModal.addEventListener('click', function(e) {
+        if (e.target === editModal) closeEditModal();
+    });
+
+    [editName, editQty, editPrice].forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); saveEditModal(); }
+            else if (e.key === 'Escape') closeEditModal();
+        });
+    });
+
+    // ==================== KONFIRMASI ====================
+    function showConfirm(title, message, okText, callback, okClass = 'btn-danger') {
+        document.getElementById('confirmTitleText').textContent = title;
+        document.getElementById('confirmMessage').innerHTML = message;
+        const okBtn = document.getElementById('confirmOkBtn');
+        okBtn.textContent = okText;
+        okBtn.className = 'btn ' + okClass;
+        confirmCallback = callback;
+        confirmModal.classList.add('active');
+    }
+
+    function closeConfirm() {
+        confirmModal.classList.remove('active');
+        confirmCallback = null;
+    }
+
+    function confirmOk() {
+        if (confirmCallback) confirmCallback();
+        closeConfirm();
+    }
+
+    confirmModal.addEventListener('click', function(e) {
+        if (e.target === confirmModal) closeConfirm();
+    });
+
+    // ==================== AKSI DATA ====================
+    function deleteItem(index) {
+        const itemName = items[index].name;
+        showConfirm(
+            'Hapus Item',
+            `Apakah Anda yakin ingin menghapus <strong>"${itemName}"</strong> dari daftar?`,
+            'Ya, Hapus',
+            () => {
+                items.splice(index, 1);
+                items.forEach((item, i) => item.no = i + 1);
+                renderTable();
+                saveToLocal(true);
+                showToast('Item dihapus', 'info');
+            }
+        );
+    }
+
+    function newData() {
+        // Jika sudah kosong, tidak perlu konfirmasi
+        if (items.length === 0 && rabValue === 0) {
+            showToast('Data sudah kosong', 'info');
+            return;
+        }
+
+        showConfirm(
+            'Buat Data Baru',
+            `Anda akan membuat daftar belanja baru. <strong>Semua data saat ini akan dihapus.</strong><br><br>Disarankan untuk <strong>menyimpan</strong> atau <strong>mengekspor</strong> data terlebih dahulu.`,
+            'Ya, Buat Baru',
+            () => {
+                items = [];
+                rabValue = 0;
+                rabInput.value = '0';
+                renderTable();
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(STORAGE_TIME_KEY);
+                localStorage.removeItem(STORAGE_RAB_KEY);
+                lastSavedEl.textContent = 'Belum disimpan';
+                lastWarningState = null;
+                showToast('Data baru dibuat', 'success');
+            }
+        );
+    }
+
+    // ==================== FORM MANUAL ====================
+    function toggleManualForm() {
+        const form = document.getElementById('manualForm');
+        form.classList.toggle('show');
+        if (form.classList.contains('show')) {
+            setTimeout(() => document.getElementById('newName').focus(), 100);
+        }
+    }
+
+    function addManualData() {
+        const name = document.getElementById('newName').value.trim();
+        const qty = parseInt(document.getElementById('newQty').value) || 0;
+        const price = parseInt(document.getElementById('newPrice').value) || 0;
+
+        if (!name) { showToast('Nama bahan harus diisi!', 'error'); return; }
+
+        const newNo = items.length > 0 ? Math.max(...items.map(i => i.no)) + 1 : 1;
+        items.push({ no: newNo, name, qty, price });
+
+        document.getElementById('newName').value = '';
+        document.getElementById('newQty').value = '1';
+        document.getElementById('newPrice').value = '0';
+
+        toggleManualForm();
+        renderTable();
+        saveToLocal(true);
+        showToast('Bahan ditambahkan', 'success');
+    }
+
+    // ==================== EXCEL ====================
+    function downloadTemplate() {
+        const templateData = [
+            ["No", "Nama Bahan", "Jumlah", "Harga Satuan"],
+            [1, "Contoh Bahan A", 2, 50000],
+            [2, "Contoh Bahan B", 1, 75000]
+        ];
+        const ws = XLSX.utils.aoa_to_sheet(templateData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Template Belanja");
+        ws['!cols'] = [{ wch: 5 }, { wch: 30 }, { wch: 10 }, { wch: 15 }];
+        XLSX.writeFile(wb, "Template_Estimasi_Belanja.xlsx");
+        showToast('Template diunduh', 'success');
+    }
+
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                const rows = jsonData.slice(1);
+
+                if (rows.length === 0) { showToast('File Excel kosong', 'error'); return; }
+
+                let newItems = [];
+                let maxNo = items.length > 0 ? Math.max(...items.map(i => i.no)) : 0;
+
+                rows.forEach((row) => {
+                    const name = row[1] ? String(row[1]).trim() : '';
+                    const qty = row[2] ? parseInt(row[2]) : 1;
+                    const price = row[3] ? parseInt(row[3]) : 0;
+
+                    if (name) {
+                        maxNo++;
+                        newItems.push({ no: maxNo, name, qty: isNaN(qty) ? 1 : qty, price: isNaN(price) ? 0 : price });
+                    }
+                });
+
+                if (newItems.length > 0) {
+                    items = items.concat(newItems);
+                    renderTable();
+                    saveToLocal(true);
+                    showToast(`Import ${newItems.length} data berhasil`, 'success');
+                } else {
+                    showToast('Format Excel tidak sesuai template', 'error');
+                }
+            } catch (err) {
+                showToast('Gagal membaca file Excel', 'error');
+            }
+            fileInput.value = '';
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // ==================== EXPORT EXCEL ====================
+    function exportExcel() {
+        if (items.length === 0) { showToast('Tidak ada data untuk diekspor', 'error'); return; }
+
+        const data = [["No", "Nama Bahan", "Jumlah", "Harga Satuan", "Harga Jumlah"]];
+        let grandTotal = 0;
+
+        items.sort((a, b) => a.no - b.no).forEach(item => {
+            const rowTotal = item.qty * item.price;
+            grandTotal += rowTotal;
+            data.push([item.no, item.name, item.qty, item.price, rowTotal]);
+        });
+
+        data.push(["", "", "", "TOTAL ESTIMASI", grandTotal]);
+        data.push(["", "", "", "ANGGARAN RAB", rabValue]);
+        data.push(["", "", "", "SELISIH", rabValue - grandTotal]);
+        data.push(["", "", "", "STATUS", grandTotal > rabValue && rabValue > 0 ? "MELEBIHI ANGGARAN" : "AMAN"]);
+
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Estimasi Belanja");
+        ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 10 }, { wch: 18 }, { wch: 18 }];
+
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10);
+        XLSX.writeFile(wb, `Estimasi_Belanja_${dateStr}.xlsx`);
+        showToast('Excel berhasil diekspor', 'success');
+    }
+
+    // ==================== EXPORT PDF ====================
+    function exportPDF() {
+        if (items.length === 0) { showToast('Tidak ada data untuk diekspor', 'error'); return; }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFillColor(99, 102, 241);
+        doc.rect(0, 0, 210, 30, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.setFont(undefined, 'bold');
+        doc.text('Estimasi Belanja Praktik', 14, 18);
+        
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('id-ID', { 
+            day: '2-digit', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+        doc.text('Tanggal: ' + dateStr, 14, 25);
+
+        const body = [];
+        let grandTotal = 0;
+
+        items.sort((a, b) => a.no - b.no).forEach(item => {
+            const rowTotal = item.qty * item.price;
+            grandTotal += rowTotal;
+            body.push([
+                item.no,
+                item.name,
+                item.qty,
+                'Rp ' + formatNumber(item.price),
+                'Rp ' + formatNumber(rowTotal)
+            ]);
+        });
+
+        const isOver = grandTotal > rabValue && rabValue > 0;
+        const selisih = rabValue - grandTotal;
+
+        doc.autoTable({
+            startY: 38,
+            head: [['No', 'Nama Bahan', 'Jumlah', 'Harga Satuan', 'Harga Jumlah']],
+            body: body,
+            foot: [
+                ['', '', '', 'TOTAL ESTIMASI', 'Rp ' + formatNumber(grandTotal)],
+                ['', '', '', 'ANGGARAN RAB', 'Rp ' + formatNumber(rabValue)],
+                ['', '', '', 'SELISIH', 'Rp ' + formatNumber(Math.abs(selisih))],
+                ['', '', '', 'STATUS', isOver ? 'MELEBIHI ANGGARAN' : (rabValue > 0 ? 'AMAN' : '-')]
+            ],
+            theme: 'grid',
+            headStyles: {
+                fillColor: [99, 102, 241],
+                textColor: 255,
+                fontStyle: 'bold',
+                fontSize: 10,
+                halign: 'center'
+            },
+            footStyles: {
+                fillColor: isOver ? [254, 226, 226] : [220, 252, 231],
+                textColor: isOver ? [153, 27, 27] : [22, 101, 52],
+                fontStyle: 'bold',
+                fontSize: 10
+            },
+            bodyStyles: {
+                fontSize: 10,
+                textColor: [30, 41, 59]
+            },
+            columnStyles: {
+                0: { halign: 'center', cellWidth: 12 },
+                1: { cellWidth: 70 },
+                2: { halign: 'center', cellWidth: 18 },
+                3: { halign: 'right', cellWidth: 35 },
+                4: { halign: 'right', cellWidth: 35 }
+            },
+            alternateRowStyles: {
+                fillColor: [248, 250, 252]
+            },
+            margin: { top: 38, left: 14, right: 14 }
+        });
+
+        const dateFile = now.toISOString().slice(0, 10);
+        doc.save(`Estimasi_Belanja_${dateFile}.pdf`);
+        showToast('PDF berhasil diekspor', 'success');
+    }
+
+    // ==================== INIT ====================
+    function init() {
+        const loaded = loadFromLocal();
+        // Jika tidak ada data tersimpan, tetap kosong (tidak load default)
+        renderTable();
+    }
+
+    init();
+
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            saveToLocal();
+        }
+    });
+
+    window.addEventListener('beforeunload', function(e) {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const current = JSON.stringify(items);
+        if (saved !== current && items.length > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+</script>
+
+</body>
+</html>
