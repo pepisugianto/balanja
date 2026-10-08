@@ -426,7 +426,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* === INPUT TRIGGER === */
+        /* === INPUT TRIGGER (untuk tabel & footer) === */
         .input-trigger {
             display: inline-block;
             padding: 3px 5px;
@@ -439,6 +439,7 @@
             min-width: 28px;
             text-align: center;
             line-height: 1.2;
+            transition: all 0.15s;
         }
 
         .input-trigger:active { background: #e2e8f0; }
@@ -446,6 +447,60 @@
         .input-trigger.price-trigger {
             color: var(--success-dark);
             background: #f0fdf4;
+        }
+
+        /* === FOOTER TRIGGER (untuk RAB & PENCAIRAN) === */
+        .footer-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 3px;
+            padding: 3px 10px;
+            background: white;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            min-width: 95px;
+        }
+
+        .footer-trigger .ft-prefix {
+            font-size: 10px;
+            opacity: 0.7;
+            font-weight: 800;
+        }
+
+        .footer-trigger .ft-value {
+            font-weight: 800;
+        }
+
+        .footer-trigger:active {
+            transform: scale(0.97);
+        }
+
+        .footer-trigger.rab-trigger {
+            color: var(--warning-dark);
+            border-color: #fcd34d;
+            background: #fffbeb;
+        }
+
+        .footer-trigger.rab-trigger:hover {
+            border-color: var(--warning);
+            box-shadow: 0 0 0 3px rgba(234,179,8,0.15);
+        }
+
+        .footer-trigger.pencairan-trigger {
+            color: var(--info-dark);
+            border-color: #7dd3fc;
+            background: #f0f9ff;
+        }
+
+        .footer-trigger.pencairan-trigger:hover {
+            border-color: var(--info);
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
         }
 
         /* === CURRENCY === */
@@ -509,7 +564,7 @@
         }
 
         /* ========================================= */
-        /* === FOOTER STICKY (FULL WIDTH) === */
+        /* === FOOTER STICKY === */
         /* ========================================= */
         .footer-sticky {
             flex-shrink: 0;
@@ -659,67 +714,6 @@
 
         .label-status-badge i { font-size: 10px; }
 
-        /* === RAB / PENCAIRAN INPUT === */
-        .rab-input-wrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            background: white;
-            border: 1.5px solid #fcd34d;
-            border-radius: 6px;
-            padding: 2px 6px;
-        }
-
-        .rab-input-wrapper .prefix {
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--warning-dark);
-            font-family: 'Courier New', monospace;
-        }
-
-        #rabInput {
-            border: none;
-            outline: none;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--warning-dark);
-            font-family: 'Courier New', monospace;
-            width: 70px;
-            text-align: right;
-            background: transparent;
-            padding: 2px 0;
-        }
-
-        .pencairan-input-wrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            background: white;
-            border: 1.5px solid #7dd3fc;
-            border-radius: 6px;
-            padding: 2px 6px;
-        }
-
-        .pencairan-input-wrapper .prefix {
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--info-dark);
-            font-family: 'Courier New', monospace;
-        }
-
-        #pencairanInput {
-            border: none;
-            outline: none;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--info-dark);
-            font-family: 'Courier New', monospace;
-            width: 70px;
-            text-align: right;
-            background: transparent;
-            padding: 2px 0;
-        }
-
         /* === SISA RAB === */
         #sisaRab {
             font-size: 13px;
@@ -819,7 +813,6 @@
             transform: scale(0.95);
         }
 
-        /* Ikon dalam tombol */
         .fs-float-btn .fs-icon {
             position: absolute;
             transition: all 0.3s ease;
@@ -838,7 +831,6 @@
             transform: scale(0.5) rotate(-90deg);
         }
 
-        /* Saat dalam mode fullscreen */
         .fs-float-btn.is-fullscreen .fs-icon-enter {
             opacity: 0;
             transform: scale(0.5) rotate(90deg);
@@ -849,7 +841,6 @@
             transform: scale(1) rotate(0deg);
         }
 
-        /* Badge kecil di tombol */
         .fs-float-btn::after {
             content: '';
             position: absolute;
@@ -866,10 +857,8 @@
 
         .fs-float-btn.is-fullscreen::after {
             opacity: 1;
-            background: var(--success);
         }
 
-        /* Ring pulsing effect */
         .fs-float-btn::before {
             content: '';
             position: absolute;
@@ -896,7 +885,6 @@
             }
         }
 
-        /* Tooltip saat hover */
         .fs-float-btn .fs-tooltip {
             position: absolute;
             right: 62px;
@@ -930,7 +918,6 @@
             transform: translateY(-50%) translateX(0);
         }
 
-        /* Responsive - mobile */
         @media (max-width: 480px) {
             .fs-float-btn {
                 width: 46px;
@@ -944,7 +931,6 @@
             }
         }
 
-        /* Sembunyikan tooltip di perangkat sentuh */
         @media (hover: none) {
             .fs-float-btn .fs-tooltip {
                 display: none;
@@ -961,47 +947,67 @@
             justify-content: center;
             align-items: center;
             padding: 12px;
+            backdrop-filter: blur(3px);
+            animation: fadeIn 0.2s ease;
         }
 
         .modal.active { display: flex; }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .modal-box {
             background: white;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 14px;
             width: 100%;
-            max-width: 340px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 360px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             text-align: center;
             max-height: 90vh;
             overflow-y: auto;
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-title {
-            font-size: 13px;
+            font-size: 15px;
             color: var(--text-dark);
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
+        .modal-title i { font-size: 18px; }
+
         .modal-subtitle {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-light);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             font-weight: 600;
         }
 
         .modal-input {
             width: 100%;
-            padding: 12px;
-            font-size: 22px;
+            padding: 14px;
+            font-size: 24px;
             text-align: center;
             border: 2px solid var(--border);
             border-radius: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 8px;
             font-weight: 800;
             color: var(--primary);
             font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
         }
 
         .modal-input:focus {
@@ -1010,15 +1016,45 @@
             box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
 
+        /* Variasi warna input modal */
+        .modal-input.rab-input {
+            color: var(--warning-dark);
+            border-color: #fcd34d;
+        }
+
+        .modal-input.rab-input:focus {
+            border-color: var(--warning);
+            box-shadow: 0 0 0 3px rgba(234,179,8,0.15);
+        }
+
+        .modal-input.pencairan-input {
+            color: var(--info-dark);
+            border-color: #7dd3fc;
+        }
+
+        .modal-input.pencairan-input:focus {
+            border-color: var(--info);
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+        }
+
+        .modal-preview {
+            font-size: 12px;
+            color: var(--text-medium);
+            font-weight: 700;
+            margin-bottom: 16px;
+            min-height: 18px;
+            letter-spacing: 0.3px;
+        }
+
         .modal-buttons {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
 
         .modal-buttons .btn {
             flex: 1;
-            padding: 10px;
-            font-size: 12px;
+            padding: 12px;
+            font-size: 13px;
             justify-content: center;
         }
 
@@ -1070,6 +1106,7 @@
             align-items: center;
             gap: 6px;
             margin-bottom: 8px;
+            justify-content: flex-start;
         }
 
         .confirm-modal .modal-message {
@@ -1122,7 +1159,6 @@
             thead th { font-size: 8px; }
             tbody td:nth-child(3) { font-size: 10px; }
             .check-toggle { width: 20px; height: 20px; }
-            #rabInput, #pencairanInput { width: 60px; font-size: 10px; }
             .footer-grid { font-size: 10px; padding: 4px 8px; gap: 4px; }
             .footer-grid.total-row { padding: 6px 10px; }
             .footer-grid.status-row { padding: 5px 8px; }
@@ -1133,6 +1169,8 @@
             #grandTotal .rp-prefix { font-size: 11px; }
             #grandTotal .rp-value { font-size: 14px; }
             #sisaRab { font-size: 11px; }
+            .footer-trigger { padding: 3px 8px; min-width: 80px; font-size: 11px; }
+            .footer-trigger .ft-prefix { font-size: 9px; }
         }
 
         @media (min-width: 768px) {
@@ -1170,7 +1208,6 @@
             .progress-header { padding: 10px 20px; }
             .progress-header .progress-label { font-size: 12px; }
             .progress-header .progress-count { font-size: 12px; }
-            #rabInput, #pencairanInput { width: 90px; font-size: 12px; }
             .footer-grid { font-size: 12px; padding: 6px 16px; gap: 8px; }
             .footer-grid.total-row { padding: 10px 16px; }
             .footer-grid.status-row { padding: 8px 16px; }
@@ -1182,6 +1219,8 @@
             #grandTotal .rp-prefix { font-size: 14px; }
             #grandTotal .rp-value { font-size: 18px; }
             #sisaRab { font-size: 14px; }
+            .footer-trigger { padding: 4px 12px; min-width: 110px; font-size: 13px; }
+            .footer-trigger .ft-prefix { font-size: 11px; }
         }
     </style>
 </head>
@@ -1312,7 +1351,7 @@
             </div>
         </div>
         
-        <!-- RAB -->
+        <!-- RAB (dengan TRIGGER, bukan input) -->
         <div class="footer-grid rab-row">
             <div class="fg-label" style="color: var(--warning-dark);">
                 <i class="ti-wallet"></i> RAB
@@ -1323,14 +1362,15 @@
                 </span>
             </div>
             <div class="fg-value">
-                <div class="rab-input-wrapper">
-                    <span class="prefix">Rp</span>
-                    <input type="text" id="rabInput" inputmode="numeric" placeholder="0" value="0">
+                <!-- TRIGGER: klik untuk buka modal -->
+                <div class="footer-trigger rab-trigger" onclick="openFooterModal('rab')" title="Klik untuk edit RAB">
+                    <span class="ft-prefix">Rp</span>
+                    <span class="ft-value" id="rabDisplay">0</span>
                 </div>
             </div>
         </div>
         
-        <!-- PENCAIRAN -->
+        <!-- PENCAIRAN (dengan TRIGGER, bukan input) -->
         <div class="footer-grid pencairan-row">
             <div class="fg-label" style="color: var(--info-dark);">
                 <i class="ti-money"></i> PENCAIRAN
@@ -1341,9 +1381,10 @@
                 </span>
             </div>
             <div class="fg-value">
-                <div class="pencairan-input-wrapper">
-                    <span class="prefix">Rp</span>
-                    <input type="text" id="pencairanInput" inputmode="numeric" placeholder="0" value="0">
+                <!-- TRIGGER: klik untuk buka modal -->
+                <div class="footer-trigger pencairan-trigger" onclick="openFooterModal('pencairan')" title="Klik untuk edit Pencairan">
+                    <span class="ft-prefix">Rp</span>
+                    <span class="ft-value" id="pencairanDisplay">0</span>
                 </div>
             </div>
         </div>
@@ -1384,7 +1425,7 @@
     </span>
 </button>
 
-<!-- Modal Input Angka -->
+<!-- Modal Input Angka (untuk edit qty/harga bahan) -->
 <div class="modal" id="inputModal">
     <div class="modal-box">
         <div class="modal-title" id="modalTitle">Edit</div>
@@ -1397,10 +1438,27 @@
     </div>
 </div>
 
+<!-- === MODAL UNTUK RAB & PENCAIRAN === -->
+<div class="modal" id="footerModal">
+    <div class="modal-box">
+        <div class="modal-title" id="footerModalTitle">
+            <i class="ti-wallet"></i>
+            <span id="footerModalTitleText">Edit RAB</span>
+        </div>
+        <div class="modal-subtitle" id="footerModalSubtitle">Masukkan jumlah anggaran</div>
+        <input type="text" id="footerModalInput" class="modal-input" inputmode="numeric" placeholder="0">
+        <div class="modal-preview" id="footerModalPreview">Rp 0</div>
+        <div class="modal-buttons">
+            <button class="btn btn-outline" onclick="closeFooterModal()">Batal</button>
+            <button class="btn btn-primary" onclick="saveFooterModal()">Simpan</button>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Edit Bahan -->
 <div class="modal" id="editModal">
     <div class="modal-box" style="text-align:left;">
-        <div class="modal-title" style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+        <div class="modal-title" style="display:flex; align-items:center; gap:6px; margin-bottom:8px; justify-content:flex-start;">
             <i class="ti-pencil" style="color:var(--warning);"></i> Edit Bahan
         </div>
         
@@ -1459,13 +1517,14 @@
     let currentEditItemIndex = null;
     let confirmCallback = null;
     let lastWarningState = null;
+    let footerModalType = null; // 'rab' atau 'pencairan'
 
     // ==================== ELEMEN ====================
     const tableBody = document.getElementById("tableBody");
     const totalRow = document.getElementById('totalRow');
     const grandTotalElement = document.getElementById("grandTotal");
-    const rabInput = document.getElementById('rabInput');
-    const pencairanInput = document.getElementById('pencairanInput');
+    const rabDisplay = document.getElementById('rabDisplay');
+    const pencairanDisplay = document.getElementById('pencairanDisplay');
     const sisaRab = document.getElementById('sisaRab');
     const statusBadge = document.getElementById('statusBadge');
     const warningBanner = document.getElementById('warningBanner');
@@ -1478,6 +1537,12 @@
     const modalInput = document.getElementById('modalInput');
     const modalTitle = document.getElementById('modalTitle');
     const modalSubtitle = document.getElementById('modalSubtitle');
+    const footerModal = document.getElementById('footerModal');
+    const footerModalInput = document.getElementById('footerModalInput');
+    const footerModalTitle = document.getElementById('footerModalTitle');
+    const footerModalTitleText = document.getElementById('footerModalTitleText');
+    const footerModalSubtitle = document.getElementById('footerModalSubtitle');
+    const footerModalPreview = document.getElementById('footerModalPreview');
     const editModal = document.getElementById('editModal');
     const editName = document.getElementById('editName');
     const editQty = document.getElementById('editQty');
@@ -1530,7 +1595,6 @@
                      doc.msFullscreenElement;
 
         if (!isFs) {
-            // Masuk fullscreen
             const requestMethod = el.requestFullscreen || 
                                   el.webkitRequestFullscreen || 
                                   el.mozRequestFullScreen || 
@@ -1547,7 +1611,6 @@
                 showToast('Browser tidak mendukung fullscreen', 'error');
             }
         } else {
-            // Keluar fullscreen
             const exitMethod = doc.exitFullscreen || 
                                doc.webkitExitFullscreen || 
                                doc.mozCancelFullScreen || 
@@ -1563,7 +1626,6 @@
         }
     }
 
-    // Update UI button saat status fullscreen berubah
     function updateFullscreenUI() {
         const doc = document;
         const isFs = doc.fullscreenElement || 
@@ -1582,12 +1644,10 @@
         }
     }
 
-    // Listener untuk semua vendor
     ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
         document.addEventListener(evt, updateFullscreenUI);
     });
 
-    // Sembunyikan pulse setelah beberapa detik
     setTimeout(() => {
         if (!document.fullscreenElement) {
             fsFloatBtn.classList.remove('pulse');
@@ -1629,11 +1689,11 @@
                 if (savedTime) lastSavedEl.textContent = '✓ ' + savedTime;
                 if (savedRab) {
                     rabValue = parseInt(savedRab) || 0;
-                    rabInput.value = formatNumber(rabValue);
+                    rabDisplay.textContent = formatNumber(rabValue);
                 }
                 if (savedPencairan) {
                     pencairanValue = parseInt(savedPencairan) || 0;
-                    pencairanInput.value = formatNumber(pencairanValue);
+                    pencairanDisplay.textContent = formatNumber(pencairanValue);
                 }
                 return true;
             }
@@ -1763,7 +1823,6 @@
         const isUnderPencairan = hasPencairan && grandTotal < pencairanValue;
         const isError = isOverRAB || isUnderPencairan;
 
-        // === TOTAL ROW COLOR & GRAND TOTAL COLOR ===
         if (isError) {
             totalRow.classList.add('error');
             grandTotalElement.classList.remove('aman');
@@ -1774,7 +1833,6 @@
             grandTotalElement.classList.add('aman');
         }
 
-        // === RAB STATUS BADGE ===
         if (!hasRAB) {
             rabStatusBadge.className = 'label-status-badge info';
             rabStatusBadge.innerHTML = '<i class="ti-info-alt"></i> —';
@@ -1786,7 +1844,6 @@
             rabStatusBadge.innerHTML = '<i class="ti-check"></i> OK';
         }
 
-        // === PENCAIRAN STATUS BADGE ===
         if (!hasPencairan) {
             pencairanStatusBadge.className = 'label-status-badge info';
             pencairanStatusBadge.innerHTML = '<i class="ti-info-alt"></i> —';
@@ -1798,7 +1855,6 @@
             pencairanStatusBadge.innerHTML = '<i class="ti-check"></i> OK';
         }
 
-        // === STATUS UTAMA ===
         if (!hasRAB) {
             statusBadge.className = 'status-badge belum';
             statusBadge.innerHTML = '<i class="ti-info-alt"></i> BELUM DISET';
@@ -1842,43 +1898,82 @@
         lastWarningState = 'safe';
     }
 
-    // ==================== INPUT HANDLER RAB ====================
-    rabInput.addEventListener('input', function() {
-        const rawValue = this.value.replace(/\./g, '');
-        if (rawValue === '') {
-            this.value = '';
-            rabValue = 0;
+    // ==================== FOOTER MODAL (RAB & PENCAIRAN) ====================
+    function openFooterModal(type) {
+        footerModalType = type;
+        
+        if (type === 'rab') {
+            footerModalTitle.innerHTML = '<i class="ti-wallet" style="color:var(--warning-dark);"></i><span>Edit RAB</span>';
+            footerModalSubtitle.textContent = 'Masukkan jumlah anggaran';
+            footerModalInput.className = 'modal-input rab-input';
+            footerModalInput.value = rabValue > 0 ? formatNumber(rabValue) : '';
+            footerModalPreview.textContent = rabValue > 0 ? formatRupiah(rabValue) : 'Rp 0';
         } else {
-            const num = parseInt(rawValue) || 0;
-            this.value = formatNumber(num);
-            rabValue = num;
+            footerModalTitle.innerHTML = '<i class="ti-money" style="color:var(--info-dark);"></i><span>Edit Pencairan</span>';
+            footerModalSubtitle.textContent = 'Masukkan jumlah dana yang sudah cair';
+            footerModalInput.className = 'modal-input pencairan-input';
+            footerModalInput.value = pencairanValue > 0 ? formatNumber(pencairanValue) : '';
+            footerModalPreview.textContent = pencairanValue > 0 ? formatRupiah(pencairanValue) : 'Rp 0';
         }
+
+        footerModal.classList.add('active');
+        setTimeout(() => {
+            footerModalInput.focus();
+            footerModalInput.select();
+        }, 100);
+    }
+
+    function closeFooterModal() {
+        footerModal.classList.remove('active');
+        footerModalType = null;
+        footerModalInput.value = '';
+        footerModalPreview.textContent = 'Rp 0';
+    }
+
+    function saveFooterModal() {
+        const value = parseNumber(footerModalInput.value);
+        
+        if (footerModalType === 'rab') {
+            rabValue = value;
+            rabDisplay.textContent = formatNumber(rabValue);
+            showToast('RAB diperbarui', 'success');
+        } else if (footerModalType === 'pencairan') {
+            pencairanValue = value;
+            pencairanDisplay.textContent = formatNumber(pencairanValue);
+            showToast('Pencairan diperbarui', 'success');
+        }
+        
+        closeFooterModal();
+        
         let grandTotal = 0;
         items.forEach(item => grandTotal += item.qty * item.price);
         updateComparison(grandTotal);
-    });
+        saveToLocal(true);
+    }
 
-    rabInput.addEventListener('blur', () => saveToLocal(true));
-
-    // ==================== INPUT HANDLER PENCAIRAN ====================
-    pencairanInput.addEventListener('input', function() {
+    // Format input + preview di modal footer
+    footerModalInput.addEventListener('input', function() {
         const rawValue = this.value.replace(/\./g, '');
         if (rawValue === '') {
             this.value = '';
-            pencairanValue = 0;
+            footerModalPreview.textContent = 'Rp 0';
         } else {
             const num = parseInt(rawValue) || 0;
             this.value = formatNumber(num);
-            pencairanValue = num;
+            footerModalPreview.textContent = formatRupiah(num);
         }
-        let grandTotal = 0;
-        items.forEach(item => grandTotal += item.qty * item.price);
-        updateComparison(grandTotal);
     });
 
-    pencairanInput.addEventListener('blur', () => saveToLocal(true));
+    footerModalInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); saveFooterModal(); }
+        else if (e.key === 'Escape') closeFooterModal();
+    });
 
-    // ==================== MODAL INPUT ====================
+    footerModal.addEventListener('click', function(e) {
+        if (e.target === footerModal) closeFooterModal();
+    });
+
+    // ==================== MODAL INPUT (qty/harga bahan) ====================
     function openModal(index, type) {
         currentEditIndex = index;
         currentEditType = type;
@@ -1941,7 +2036,7 @@
         if (e.target === modal) closeModal();
     });
 
-    // ==================== MODAL EDIT ====================
+    // ==================== MODAL EDIT BAHAN ====================
     function openEditModal(index) {
         currentEditItemIndex = index;
         const item = items[index];
@@ -2061,8 +2156,8 @@
                 items = [];
                 rabValue = 0;
                 pencairanValue = 0;
-                rabInput.value = '0';
-                pencairanInput.value = '0';
+                rabDisplay.textContent = '0';
+                pencairanDisplay.textContent = '0';
                 renderTable();
                 localStorage.removeItem(STORAGE_KEY);
                 localStorage.removeItem(STORAGE_TIME_KEY);
@@ -2295,8 +2390,6 @@
             e.preventDefault();
             saveToLocal();
         }
-        // Shortcut F11 untuk fullscreen (biasanya sudah default di browser)
-        // Shortcut tambahan: Shift+F untuk toggle via tombol
         if (e.shiftKey && e.key === 'F') {
             e.preventDefault();
             toggleFullscreen();
