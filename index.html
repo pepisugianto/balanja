@@ -26,6 +26,8 @@
             --danger-dark: #dc2626;
             --bought: #10b981;
             --bought-bg: #ecfdf5;
+            --info: #0ea5e9;
+            --info-dark: #0284c7;
             
             --bg: #f1f5f9;
             --card-bg: #ffffff;
@@ -53,7 +55,7 @@
             min-height: 100vh;
         }
 
-        /* === HEADER COMPACT === */
+        /* === HEADER === */
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
@@ -85,7 +87,7 @@
             line-height: 1.2;
         }
 
-        /* === PROGRESS BAR HEADER === */
+        /* === PROGRESS HEADER === */
         .progress-header {
             background: white;
             padding: 8px 12px;
@@ -126,7 +128,7 @@
             white-space: nowrap;
         }
 
-        /* === TOOLBAR COMPACT - SCROLLABLE === */
+        /* === TOOLBAR === */
         .toolbar {
             display: flex;
             gap: 4px;
@@ -153,7 +155,7 @@
             flex-shrink: 0;
         }
 
-        /* === BUTTONS COMPACT === */
+        /* === BUTTONS === */
         .btn {
             padding: 6px 8px;
             border: none;
@@ -174,22 +176,17 @@
         .btn:active { transform: scale(0.95); }
 
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
         .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: var(--success-dark); }
         .btn-warning { background: var(--warning); color: white; }
-        .btn-warning:hover { background: var(--warning-dark); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-excel { background: var(--excel); color: white; }
-        .btn-excel:hover { background: var(--excel-dark); }
         .btn-outline {
             background: white;
             color: var(--text-medium);
             border: 1px solid #cbd5e1;
         }
-        .btn-outline:hover { background: #f8fafc; }
 
-        /* === MANUAL FORM COMPACT === */
+        /* === MANUAL FORM === */
         .manual-form {
             display: none;
             flex-wrap: wrap;
@@ -227,24 +224,64 @@
             font-size: 12px;
         }
 
-        /* === WARNING BANNER COMPACT === */
+        /* === WARNING BANNER === */
         .warning-banner {
             display: none;
-            padding: 8px 10px;
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            border-bottom: 1px solid #fca5a5;
+            padding: 12px 14px;
+            background: #fef2f2;
+            border-left: 6px solid var(--danger);
+            border-bottom: 2px solid var(--danger);
             color: var(--danger-dark);
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 800;
             align-items: center;
-            gap: 6px;
-            line-height: 1.3;
+            gap: 10px;
+            line-height: 1.4;
+            box-shadow: 0 3px 8px rgba(239,68,68,0.15);
         }
 
         .warning-banner.show { display: flex; }
-        .warning-banner .icon { font-size: 14px; flex-shrink: 0; }
 
-        /* === TABLE COMPACT === */
+        .warning-banner.warn { 
+            background: #fffbeb;
+            border-left-color: var(--warning);
+            border-bottom-color: var(--warning);
+            color: var(--warning-dark);
+            box-shadow: 0 3px 8px rgba(234,179,8,0.15);
+        }
+
+        .warning-banner .icon { 
+            font-size: 24px; 
+            flex-shrink: 0;
+            animation: shake 0.6s ease infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-12deg); }
+            75% { transform: rotate(12deg); }
+        }
+
+        .warning-banner .text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .warning-banner .warning-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .warning-banner .warning-subtitle {
+            font-size: 10px;
+            font-weight: 700;
+            opacity: 0.85;
+        }
+
+        /* === TABLE === */
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -357,9 +394,7 @@
             box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
         }
 
-        .check-toggle.checked .check-icon {
-            opacity: 1;
-        }
+        .check-toggle.checked .check-icon { opacity: 1; }
 
         /* === BADGE BELI === */
         .badge-bought {
@@ -377,7 +412,7 @@
             letter-spacing: 0.3px;
         }
 
-        /* === INPUT TRIGGER COMPACT === */
+        /* === INPUT TRIGGER === */
         .input-trigger {
             display: inline-block;
             padding: 3px 5px;
@@ -399,7 +434,7 @@
             background: #f0fdf4;
         }
 
-        /* === CURRENCY COMPACT === */
+        /* === CURRENCY === */
         .currency {
             font-family: 'Courier New', monospace;
             font-weight: 700;
@@ -411,7 +446,7 @@
             display: block;
         }
 
-        /* === ACTION CELL COMPACT === */
+        /* === ACTION CELL === */
         .action-cell {
             display: flex;
             gap: 1px;
@@ -433,18 +468,105 @@
 
         .btn-action:active { background: #f1f5f9; }
 
-        /* === TOTAL & RAB ROWS COMPACT === */
+        /* ========================================= */
+        /* === FOOTER ROWS === */
+        /* ========================================= */
+        
+        tfoot tr td {
+            padding: 8px 6px;
+            vertical-align: middle;
+        }
+
+        tfoot tr td.footer-label {
+            text-align: right;
+            padding-right: 10px;
+            width: 58%;
+        }
+
+        tfoot tr td.footer-value {
+            text-align: left;
+            padding-left: 10px;
+            width: 42%;
+        }
+
+        .footer-label-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        /* === LABEL STATUS BADGE === */
+        .label-status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            flex-shrink: 0;
+            min-width: 60px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border: 1.5px solid transparent;
+        }
+
+        .label-status-badge.ok {
+            background: #dcfce7;
+            color: var(--success-dark);
+            border-color: var(--success);
+        }
+
+        .label-status-badge.info {
+            background: #e0f2fe;
+            color: var(--info-dark);
+            border-color: var(--info);
+        }
+
+        .label-status-badge.err {
+            background: #fee2e2;
+            color: var(--danger-dark);
+            border-color: var(--danger);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .label-status-badge.warn {
+            background: #fef3c7;
+            color: var(--warning-dark);
+            border-color: var(--warning);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .label-status-badge i { font-size: 10px; }
+
+        /* === TOTAL ROW === */
         tfoot tr.total-row {
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            transition: background 0.3s ease;
+        }
+
+        /* Total Belanja jadi merah jika error */
+        tfoot tr.total-row.error {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
         }
 
         tfoot tr.total-row td {
-            padding: 8px 6px;
             font-weight: 800;
             font-size: 11px;
             color: var(--success-dark);
             border-top: 2px solid var(--success);
             border-bottom: none;
+            transition: color 0.3s ease;
+        }
+
+        tfoot tr.total-row.error td {
+            color: var(--danger-dark);
+            border-top-color: var(--danger);
         }
 
         #grandTotal {
@@ -454,12 +576,12 @@
             font-weight: 800;
         }
 
+        /* === RAB ROW === */
         tfoot tr.rab-row {
             background: #fef3c7;
         }
 
         tfoot tr.rab-row td {
-            padding: 7px 6px;
             font-weight: 800;
             font-size: 11px;
             color: var(--warning-dark);
@@ -490,59 +612,139 @@
             font-weight: 800;
             color: var(--warning-dark);
             font-family: 'Courier New', monospace;
-            width: 70px;
+            width: 65px;
             text-align: right;
             background: transparent;
             padding: 0;
         }
 
-        tfoot tr.selisih-row {
+        /* === PENCAIRAN ROW === */
+        tfoot tr.pencairan-row {
+            background: #e0f2fe;
+        }
+
+        tfoot tr.pencairan-row td {
+            font-weight: 800;
+            font-size: 11px;
+            color: var(--info-dark);
+            border-bottom: none;
+        }
+
+        .pencairan-input-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: white;
+            border: 1.5px solid #7dd3fc;
+            border-radius: 6px;
+            padding: 3px 6px;
+        }
+
+        .pencairan-input-wrapper .prefix {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--info-dark);
+            font-family: 'Courier New', monospace;
+        }
+
+        #pencairanInput {
+            border: none;
+            outline: none;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--info-dark);
+            font-family: 'Courier New', monospace;
+            width: 65px;
+            text-align: right;
+            background: transparent;
+            padding: 0;
+        }
+
+        /* === SISA RAB ROW === */
+        tfoot tr.sisa-row {
+            background: #f1f5f9;
+        }
+
+        tfoot tr.sisa-row td {
+            font-weight: 800;
+            font-size: 11px;
+            color: var(--text-medium);
+            border-bottom: none;
+        }
+
+        #sisaRab {
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 800;
+            color: var(--success-dark);
+        }
+
+        #sisaRab.negatif { color: var(--danger); }
+
+        /* === STATUS ROW === */
+        tfoot tr.status-row {
             background: #f8fafc;
         }
 
-        tfoot tr.selisih-row td {
-            padding: 7px 6px;
+        tfoot tr.status-row td {
             font-weight: 700;
             font-size: 10px;
             color: var(--text-medium);
             border-bottom: 1px solid var(--border);
+            border-top: 2px solid var(--border);
         }
 
-        #selisihValue {
-            font-size: 11px;
-            font-family: 'Courier New', monospace;
-            font-weight: 800;
-        }
-
-        #selisihValue.aman { color: var(--success-dark); }
-        #selisihValue.lebih { color: var(--danger); }
-
-        /* === STATUS BADGE COMPACT === */
+        /* === STATUS BADGE UTAMA === */
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 3px;
-            padding: 2px 6px;
+            gap: 5px;
+            padding: 6px 14px;
             border-radius: 999px;
-            font-size: 9px;
+            font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.6px;
+            border: 2px solid transparent;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
 
-        .status-badge.aman { background: #dcfce7; color: var(--success-dark); }
+        .status-badge i { font-size: 13px; }
+
+        .status-badge.aman { 
+            background: #dcfce7; 
+            color: var(--success-dark);
+            border-color: var(--success);
+        }
+
         .status-badge.lebih {
             background: #fee2e2;
             color: var(--danger-dark);
-            animation: pulse 1.5s ease-in-out infinite;
+            border-color: var(--danger);
+            animation: pulse 1.2s ease-in-out infinite;
+            box-shadow: 0 3px 12px rgba(239,68,68,0.3);
+        }
+
+        .status-badge.kurang {
+            background: #fee2e2;
+            color: var(--danger-dark);
+            border-color: var(--danger);
+            animation: pulse 1.2s ease-in-out infinite;
+            box-shadow: 0 3px 12px rgba(239,68,68,0.3);
+        }
+
+        .status-badge.belum {
+            background: #e2e8f0;
+            color: var(--text-medium);
+            border-color: #cbd5e1;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.75; transform: scale(1.03); }
         }
 
-        /* === EMPTY STATE COMPACT === */
+        /* === EMPTY STATE === */
         .empty-state {
             text-align: center;
             padding: 30px 16px;
@@ -568,7 +770,7 @@
             margin-bottom: 12px;
         }
 
-        /* === MODAL COMPACT === */
+        /* === MODAL === */
         .modal {
             display: none;
             position: fixed;
@@ -639,7 +841,7 @@
             justify-content: center;
         }
 
-        /* === EDIT FORM COMPACT === */
+        /* === EDIT FORM === */
         .edit-form-group {
             text-align: left;
             margin-bottom: 10px;
@@ -699,7 +901,7 @@
 
         .confirm-modal .modal-message strong { color: var(--danger); }
 
-        /* === TOAST COMPACT === */
+        /* === TOAST === */
         .toast {
             position: fixed;
             bottom: 16px;
@@ -728,6 +930,7 @@
         .toast.error { background: var(--danger); }
         .toast.info { background: var(--primary); }
         .toast.bought { background: var(--bought); }
+        .toast.warning { background: var(--warning-dark); }
 
         /* === RESPONSIVE === */
         @media (max-width: 380px) {
@@ -738,9 +941,13 @@
             thead th { font-size: 8px; }
             tbody td:nth-child(3) { font-size: 10px; }
             .check-toggle { width: 20px; height: 20px; }
+            #rabInput, #pencairanInput { width: 55px; font-size: 10px; }
+            .footer-label-text { font-size: 10px; }
+            .label-status-badge { font-size: 8px; padding: 3px 6px; min-width: 50px; }
+            .label-status-badge i { font-size: 9px; }
+            .status-badge { font-size: 10px; padding: 5px 10px; }
         }
 
-        /* Desktop view */
         @media (min-width: 768px) {
             body { 
                 display: flex; 
@@ -776,6 +983,12 @@
             .progress-header { padding: 10px 20px; }
             .progress-header .progress-label { font-size: 12px; }
             .progress-header .progress-count { font-size: 12px; }
+            #rabInput, #pencairanInput { width: 90px; font-size: 12px; }
+            .footer-label-text { font-size: 12px; }
+            .label-status-badge { font-size: 10px; padding: 5px 10px; min-width: 70px; }
+            .label-status-badge i { font-size: 11px; }
+            .status-badge { font-size: 12px; padding: 7px 16px; }
+            .status-badge i { font-size: 14px; }
         }
     </style>
 </head>
@@ -793,17 +1006,15 @@
 
     <!-- Progress Header -->
     <div class="progress-header" id="progressHeader" style="display: none;">
-        <span class="progress-label">🛒 Progres Belanja</span>
+        <span class="progress-label">🛒 Progres</span>
         <div class="progress-track">
             <div class="progress-fill" id="progressFill"></div>
         </div>
         <span class="progress-count" id="progressCount">0/0</span>
     </div>
 
-    <!-- Toolbar Compact dengan Urutan Baru -->
-    <!-- Urutan: Template → Excel → Bahan → Simpan → Baru → PDF → XLS -->
+    <!-- Toolbar -->
     <div class="toolbar">
-        <!-- GROUP 1: Template, Excel, Bahan -->
         <div class="toolbar-group">
             <button class="btn btn-outline" onclick="downloadTemplate()" title="Download Template Excel">
                 <i class="ti-download"></i> Template
@@ -819,7 +1030,6 @@
 
         <div class="toolbar-separator"></div>
 
-        <!-- GROUP 2: Simpan, Baru -->
         <div class="toolbar-group">
             <button class="btn btn-primary" onclick="saveToLocal()" title="Simpan data">
                 <i class="ti-save"></i> Simpan
@@ -831,7 +1041,6 @@
 
         <div class="toolbar-separator"></div>
 
-        <!-- GROUP 3: PDF, XLS -->
         <div class="toolbar-group">
             <button class="btn btn-success" onclick="exportPDF()" title="Ekspor ke PDF">
                 <i class="ti-receipt"></i> PDF
@@ -854,7 +1063,10 @@
     <!-- Warning Banner -->
     <div class="warning-banner" id="warningBanner">
         <span class="icon"><i class="ti-alert"></i></span>
-        <span>Total melebihi RAB!</span>
+        <div class="text-block">
+            <span class="warning-title" id="warningTitle">PERHATIAN!</span>
+            <span class="warning-subtitle" id="warningText">Total melebihi RAB!</span>
+        </div>
     </div>
 
     <!-- Table -->
@@ -887,30 +1099,75 @@
                 <!-- Data diisi JavaScript -->
             </tbody>
             <tfoot>
-                <tr class="total-row">
-                    <td colspan="5" style="text-align: right; padding-right: 6px;">TOTAL</td>
-                    <td id="grandTotal">Rp 0</td>
+                <!-- TOTAL BELANJA (warna dinamis) -->
+                <tr class="total-row" id="totalRow">
+                    <td colspan="4" class="footer-label">
+                        <span class="footer-label-text" style="color: inherit;">
+                            TOTAL BELANJA
+                        </span>
+                    </td>
+                    <td id="grandTotal" class="footer-value">Rp 0</td>
                     <td></td>
                 </tr>
+                
+                <!-- RAB (dengan badge status kiri) -->
                 <tr class="rab-row">
-                    <td colspan="5" style="text-align: right; padding-right: 6px;">
-                        <i class="ti-wallet"></i> RAB
+                    <td colspan="4" class="footer-label">
+                        <span class="footer-label-text" style="color: var(--warning-dark);">
+                            <span class="label-status-badge info" id="rabStatusBadge">
+                                <i class="ti-info-alt"></i> —
+                            </span>
+                            <i class="ti-wallet"></i> RAB
+                        </span>
                     </td>
-                    <td colspan="2" style="text-align: left; padding-left: 6px;">
+                    <td colspan="2" class="footer-value">
                         <div class="rab-input-wrapper">
                             <span class="prefix">Rp</span>
                             <input type="text" id="rabInput" inputmode="numeric" placeholder="0" value="0">
                         </div>
                     </td>
                 </tr>
-                <tr class="selisih-row">
-                    <td colspan="5" style="text-align: right; padding-right: 6px;">
-                        <i class="ti-stats-up"></i> SELISIH
+                
+                <!-- PENCAIRAN (dengan badge status kiri) -->
+                <tr class="pencairan-row">
+                    <td colspan="4" class="footer-label">
+                        <span class="footer-label-text" style="color: var(--info-dark);">
+                            <span class="label-status-badge info" id="pencairanStatusBadge">
+                                <i class="ti-info-alt"></i> —
+                            </span>
+                            <i class="ti-money"></i> PENCAIRAN
+                        </span>
                     </td>
-                    <td colspan="2" style="text-align: left; padding-left: 6px;">
-                        <span id="selisihValue">Rp 0</span>
-                        <span id="statusBadge" class="status-badge aman" style="margin-left: 4px;">
-                            <i class="ti-check"></i> AMAN
+                    <td colspan="2" class="footer-value">
+                        <div class="pencairan-input-wrapper">
+                            <span class="prefix">Rp</span>
+                            <input type="text" id="pencairanInput" inputmode="numeric" placeholder="0" value="0">
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- SISA RAB -->
+                <tr class="sisa-row">
+                    <td colspan="4" class="footer-label">
+                        <span class="footer-label-text">
+                            <i class="ti-stats-down"></i> SISA RAB
+                        </span>
+                    </td>
+                    <td colspan="2" class="footer-value">
+                        <span id="sisaRab">Rp 0</span>
+                    </td>
+                </tr>
+                
+                <!-- STATUS -->
+                <tr class="status-row">
+                    <td colspan="4" class="footer-label">
+                        <span class="footer-label-text">
+                            <i class="ti-info-alt"></i> STATUS
+                        </span>
+                    </td>
+                    <td colspan="2" class="footer-value">
+                        <span id="statusBadge" class="status-badge belum">
+                            <i class="ti-info-alt"></i> BELUM DISET
                         </span>
                     </td>
                 </tr>
@@ -984,9 +1241,11 @@
     const STORAGE_KEY = 'estimasi_belanja_data';
     const STORAGE_TIME_KEY = 'estimasi_belanja_saved_at';
     const STORAGE_RAB_KEY = 'estimasi_belanja_rab';
+    const STORAGE_PENCAIRAN_KEY = 'estimasi_belanja_pencairan';
 
     let items = [];
     let rabValue = 0;
+    let pencairanValue = 0;
     let currentEditIndex = null;
     let currentEditType = null;
     let currentEditItemIndex = null;
@@ -995,11 +1254,17 @@
 
     // ==================== ELEMEN ====================
     const tableBody = document.getElementById("tableBody");
+    const totalRow = document.getElementById('totalRow');
     const grandTotalElement = document.getElementById("grandTotal");
     const rabInput = document.getElementById('rabInput');
-    const selisihValue = document.getElementById('selisihValue');
+    const pencairanInput = document.getElementById('pencairanInput');
+    const sisaRab = document.getElementById('sisaRab');
     const statusBadge = document.getElementById('statusBadge');
     const warningBanner = document.getElementById('warningBanner');
+    const warningTitle = document.getElementById('warningTitle');
+    const warningText = document.getElementById('warningText');
+    const rabStatusBadge = document.getElementById('rabStatusBadge');
+    const pencairanStatusBadge = document.getElementById('pencairanStatusBadge');
     const fileInput = document.getElementById('fileInput');
     const modal = document.getElementById('inputModal');
     const modalInput = document.getElementById('modalInput');
@@ -1039,7 +1304,7 @@
         toast.className = 'toast show ' + type;
         setTimeout(() => {
             toast.classList.remove('show');
-        }, 2500);
+        }, 3000);
     }
 
     // ==================== LOCAL STORAGE ====================
@@ -1047,6 +1312,7 @@
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
             localStorage.setItem(STORAGE_RAB_KEY, rabValue.toString());
+            localStorage.setItem(STORAGE_PENCAIRAN_KEY, pencairanValue.toString());
             const now = new Date();
             const timeStr = now.toLocaleString('id-ID', {
                 day: '2-digit', month: 'short',
@@ -1067,6 +1333,7 @@
             const saved = localStorage.getItem(STORAGE_KEY);
             const savedTime = localStorage.getItem(STORAGE_TIME_KEY);
             const savedRab = localStorage.getItem(STORAGE_RAB_KEY);
+            const savedPencairan = localStorage.getItem(STORAGE_PENCAIRAN_KEY);
             if (saved) {
                 items = JSON.parse(saved);
                 items.forEach(item => {
@@ -1076,6 +1343,10 @@
                 if (savedRab) {
                     rabValue = parseInt(savedRab) || 0;
                     rabInput.value = formatNumber(rabValue);
+                }
+                if (savedPencairan) {
+                    pencairanValue = parseInt(savedPencairan) || 0;
+                    pencairanInput.value = formatNumber(pencairanValue);
                 }
                 return true;
             }
@@ -1188,48 +1459,110 @@
         }
     }
 
-    // ==================== COMPARISON ====================
+    // ==================== COMPARISON LOGIC ====================
     function updateComparison(grandTotal) {
-        const selisih = rabValue - grandTotal;
-        const isOver = grandTotal > rabValue && rabValue > 0;
-        const isEqual = grandTotal === rabValue && rabValue > 0;
+        // Hitung sisa RAB
+        const sisa = rabValue - grandTotal;
+        sisaRab.textContent = formatRupiah(Math.abs(sisa));
+        
+        if (sisa < 0) {
+            sisaRab.classList.add('negatif');
+        } else {
+            sisaRab.classList.remove('negatif');
+        }
 
-        if (rabValue === 0) {
-            selisihValue.textContent = 'Rp 0';
-            selisihValue.className = '';
-            statusBadge.className = 'status-badge aman';
-            statusBadge.innerHTML = 'BELUM SET';
-            warningBanner.classList.remove('show');
+        // Cek kondisi
+        const hasRAB = rabValue > 0;
+        const hasPencairan = pencairanValue > 0;
+        const isOverRAB = hasRAB && grandTotal > rabValue;
+        const isUnderPencairan = hasPencairan && grandTotal < pencairanValue;
+
+        // ==================== TOTAL ROW COLOR ====================
+        // Merah jika ada error di RAB atau Pencairan
+        if (isOverRAB || isUnderPencairan) {
+            totalRow.classList.add('error');
+        } else {
+            totalRow.classList.remove('error');
+        }
+
+        // ==================== RAB STATUS BADGE ====================
+        if (!hasRAB) {
+            rabStatusBadge.className = 'label-status-badge info';
+            rabStatusBadge.innerHTML = '<i class="ti-info-alt"></i> —';
+        } else if (isOverRAB) {
+            // MERAH jika total belanja melebihi RAB
+            rabStatusBadge.className = 'label-status-badge err';
+            rabStatusBadge.innerHTML = '<i class="ti-alert"></i> LEBIH';
+        } else {
+            // Hijau jika aman
+            rabStatusBadge.className = 'label-status-badge ok';
+            rabStatusBadge.innerHTML = '<i class="ti-check"></i> OK';
+        }
+
+        // ==================== PENCAIRAN STATUS BADGE ====================
+        if (!hasPencairan) {
+            pencairanStatusBadge.className = 'label-status-badge info';
+            pencairanStatusBadge.innerHTML = '<i class="ti-info-alt"></i> —';
+        } else if (isUnderPencairan) {
+            // MERAH jika total belanja kurang dari pencairan
+            pencairanStatusBadge.className = 'label-status-badge err';
+            pencairanStatusBadge.innerHTML = '<i class="ti-alert"></i> KURANG';
+        } else {
+            // Hijau jika aman
+            pencairanStatusBadge.className = 'label-status-badge ok';
+            pencairanStatusBadge.innerHTML = '<i class="ti-check"></i> OK';
+        }
+
+        // ==================== STATUS UTAMA ====================
+        
+        // KONDISI 1: Belum set RAB
+        if (!hasRAB) {
+            statusBadge.className = 'status-badge belum';
+            statusBadge.innerHTML = '<i class="ti-info-alt"></i> BELUM DISET';
+            warningBanner.classList.remove('show', 'warn');
             lastWarningState = null;
             return;
         }
 
-        selisihValue.textContent = formatRupiah(Math.abs(selisih));
-
-        if (isOver) {
-            selisihValue.className = 'lebih';
+        // KONDISI 2: Belanja MELEBIHI RAB
+        if (isOverRAB) {
             statusBadge.className = 'status-badge lebih';
-            statusBadge.innerHTML = 'LEBIH';
+            statusBadge.innerHTML = '<i class="ti-alert"></i> LEBIH';
             warningBanner.classList.add('show');
+            warningBanner.classList.remove('warn');
+            warningTitle.textContent = '⚠️ ANGGARAN TERLAMPAUI!';
+            warningText.textContent = 'Total belanja melebihi RAB. Segera tinjau kembali!';
+            
             if (lastWarningState !== 'over') {
-                showToast('Total melebihi RAB!', 'error');
+                showToast('Total belanja melebihi RAB!', 'error');
                 lastWarningState = 'over';
             }
-        } else if (isEqual) {
-            selisihValue.className = 'aman';
-            statusBadge.className = 'status-badge aman';
-            statusBadge.innerHTML = 'PAS';
-            warningBanner.classList.remove('show');
-            lastWarningState = 'equal';
-        } else {
-            selisihValue.className = 'aman';
-            statusBadge.className = 'status-badge aman';
-            statusBadge.innerHTML = 'AMAN';
-            warningBanner.classList.remove('show');
-            lastWarningState = 'safe';
+            return;
         }
+
+        // KONDISI 3: Belanja KURANG DARI PENCAIRAN
+        if (isUnderPencairan) {
+            statusBadge.className = 'status-badge kurang';
+            statusBadge.innerHTML = '<i class="ti-alert"></i> KURANG';
+            warningBanner.classList.add('show', 'warn');
+            warningTitle.textContent = '⚠️ BELANJA KURANG!';
+            warningText.textContent = 'Belanja kurang dari dana pencairan!';
+            
+            if (lastWarningState !== 'under') {
+                showToast('Belanja kurang dari dana pencairan!', 'warning');
+                lastWarningState = 'under';
+            }
+            return;
+        }
+
+        // KONDISI 4: AMAN
+        statusBadge.className = 'status-badge aman';
+        statusBadge.innerHTML = '<i class="ti-check"></i> AMAN';
+        warningBanner.classList.remove('show', 'warn');
+        lastWarningState = 'safe';
     }
 
+    // ==================== INPUT HANDLER RAB ====================
     rabInput.addEventListener('input', function() {
         const rawValue = this.value.replace(/\./g, '');
         if (rawValue === '') {
@@ -1246,6 +1579,24 @@
     });
 
     rabInput.addEventListener('blur', () => saveToLocal(true));
+
+    // ==================== INPUT HANDLER PENCAIRAN ====================
+    pencairanInput.addEventListener('input', function() {
+        const rawValue = this.value.replace(/\./g, '');
+        if (rawValue === '') {
+            this.value = '';
+            pencairanValue = 0;
+        } else {
+            const num = parseInt(rawValue) || 0;
+            this.value = formatNumber(num);
+            pencairanValue = num;
+        }
+        let grandTotal = 0;
+        items.forEach(item => grandTotal += item.qty * item.price);
+        updateComparison(grandTotal);
+    });
+
+    pencairanInput.addEventListener('blur', () => saveToLocal(true));
 
     // ==================== MODAL INPUT ====================
     function openModal(index, type) {
@@ -1417,7 +1768,7 @@
     }
 
     function newData() {
-        if (items.length === 0 && rabValue === 0) {
+        if (items.length === 0 && rabValue === 0 && pencairanValue === 0) {
             showToast('Data sudah kosong', 'info');
             return;
         }
@@ -1429,11 +1780,14 @@
             () => {
                 items = [];
                 rabValue = 0;
+                pencairanValue = 0;
                 rabInput.value = '0';
+                pencairanInput.value = '0';
                 renderTable();
                 localStorage.removeItem(STORAGE_KEY);
                 localStorage.removeItem(STORAGE_TIME_KEY);
                 localStorage.removeItem(STORAGE_RAB_KEY);
+                localStorage.removeItem(STORAGE_PENCAIRAN_KEY);
                 lastSavedEl.textContent = 'Belum disimpan';
                 lastWarningState = null;
                 showToast('Data baru', 'success');
@@ -1543,9 +1897,10 @@
             data.push([item.no, item.name, item.qty, item.price, rowTotal, item.bought ? "SUDAH DIBELI" : "BELUM"]);
         });
 
-        data.push(["", "", "", "TOTAL", grandTotal]);
+        data.push(["", "", "", "TOTAL BELANJA", grandTotal]);
         data.push(["", "", "", "RAB", rabValue]);
-        data.push(["", "", "", "SELISIH", rabValue - grandTotal]);
+        data.push(["", "", "", "PENCAIRAN", pencairanValue]);
+        data.push(["", "", "", "SISA RAB", rabValue - grandTotal]);
 
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
@@ -1588,23 +1943,39 @@
         });
 
         const isOver = grandTotal > rabValue && rabValue > 0;
+        const isUnder = pencairanValue > 0 && grandTotal < pencairanValue && !isOver;
         const boughtCount = items.filter(i => i.bought).length;
+
+        let statusText = 'AMAN';
+        let statusColor = [220, 252, 231];
+        let statusTextColor = [22, 101, 52];
+        
+        if (isOver) {
+            statusText = 'LEBIH';
+            statusColor = [254, 226, 226];
+            statusTextColor = [153, 27, 27];
+        } else if (isUnder) {
+            statusText = 'KURANG';
+            statusColor = [254, 226, 226];
+            statusTextColor = [153, 27, 27];
+        }
 
         doc.autoTable({
             startY: 32,
             head: [['No', 'Nama Bahan', 'Qty', 'Harga', 'Jumlah', '✓']],
             body: body,
             foot: [
-                ['', '', '', 'TOTAL', 'Rp ' + formatNumber(grandTotal), ''],
+                ['', '', '', 'TOTAL BELANJA', 'Rp ' + formatNumber(grandTotal), ''],
                 ['', '', '', 'RAB', 'Rp ' + formatNumber(rabValue), ''],
-                ['', '', '', 'SELISIH', 'Rp ' + formatNumber(Math.abs(rabValue - grandTotal)), ''],
-                ['', '', '', 'STATUS', isOver ? 'MELEBIHI' : 'AMAN', boughtCount + '/' + items.length]
+                ['', '', '', 'PENCAIRAN', 'Rp ' + formatNumber(pencairanValue), ''],
+                ['', '', '', 'SISA RAB', 'Rp ' + formatNumber(rabValue - grandTotal), ''],
+                ['', '', '', 'STATUS', statusText, boughtCount + '/' + items.length]
             ],
             theme: 'grid',
             headStyles: { fillColor: [99, 102, 241], fontSize: 9, halign: 'center' },
             footStyles: {
-                fillColor: isOver ? [254, 226, 226] : [220, 252, 231],
-                textColor: isOver ? [153, 27, 27] : [22, 101, 52],
+                fillColor: statusColor,
+                textColor: statusTextColor,
                 fontSize: 9
             },
             bodyStyles: { fontSize: 9 },
