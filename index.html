@@ -2,27 +2,24 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estimasi Belanja Praktik</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Estimasi Belanja</title>
     
-    <!-- Google Fonts: Nunito -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Themify Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/themify-icons/0.1.2/css/themify-icons.css">
     
-    <!-- SheetJS untuk Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- jsPDF untuk PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     
     <style>
-        /* === VARIABEL KONSISTEN === */
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
             --success: #22c55e;
             --success-dark: #16a34a;
+            --excel: #217346;
+            --excel-dark: #185c37;
             --warning: #eab308;
             --warning-dark: #ca8a04;
             --danger: #ef4444;
@@ -30,363 +27,342 @@
             
             --bg: #f1f5f9;
             --card-bg: #ffffff;
-            --table-header-bg: #f8fafc;
-            --table-row-hover: #f8fafc;
-            
             --text-dark: #1e293b;
             --text-medium: #475569;
             --text-light: #94a3b8;
-            
             --border: #e2e8f0;
-            --border-dark: #cbd5e1;
-            
-            --fs-xs: 11px;
-            --fs-sm: 12px;
-            --fs-base: 13px;
-            --fs-md: 14px;
-            --fs-lg: 16px;
-            --fs-xl: 18px;
-            --fs-2xl: 22px;
-            --fs-3xl: 28px;
-            
-            --fw-normal: 400;
-            --fw-medium: 600;
-            --fw-bold: 700;
-            --fw-black: 800;
-            
-            --radius-sm: 6px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 16px;
-            
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
             background: var(--bg); 
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
             color: var(--text-dark);
-            font-size: var(--fs-base);
-            line-height: 1.5;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: hidden;
         }
 
         .container {
             background: var(--card-bg);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-md);
             width: 100%;
-            max-width: 1000px;
-            overflow: hidden;
-            height: fit-content;
+            max-width: 100%;
+            min-height: 100vh;
         }
 
-        /* === HEADER === */
+        /* === HEADER COMPACT === */
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 22px 28px;
+            padding: 10px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header h1 {
-            margin: 0;
-            font-size: var(--fs-2xl);
-            font-weight: var(--fw-black);
+            font-size: 14px;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
-            letter-spacing: -0.5px;
+            gap: 6px;
         }
 
-        .header h1 .icon {
-            font-size: var(--fs-2xl);
-        }
+        .header h1 .icon { font-size: 16px; }
 
         .header-info {
-            font-size: var(--fs-sm);
-            font-weight: var(--fw-medium);
+            font-size: 9px;
+            font-weight: 600;
             opacity: 0.9;
             text-align: right;
+            max-width: 120px;
+            line-height: 1.2;
         }
 
-        /* === TOOLBAR === */
+        /* === TOOLBAR COMPACT - SCROLLABLE === */
         .toolbar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 16px 28px;
-            background: var(--table-header-bg);
+            gap: 4px;
+            padding: 6px 8px;
+            background: #f8fafc;
             border-bottom: 1px solid var(--border);
-            align-items: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
+
+        .toolbar::-webkit-scrollbar { display: none; }
 
         .toolbar-group {
             display: flex;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: wrap;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
         .toolbar-separator {
             width: 1px;
-            height: 24px;
-            background: var(--border-dark);
-            margin: 0 4px;
+            background: #cbd5e1;
+            margin: 0 2px;
+            flex-shrink: 0;
         }
 
-        /* === BUTTONS === */
+        /* === BUTTONS COMPACT === */
         .btn {
-            padding: 9px 14px;
+            padding: 6px 8px;
             border: none;
-            border-radius: var(--radius-md);
+            border-radius: 6px;
             cursor: pointer;
-            font-size: var(--fs-base);
-            font-weight: var(--fw-bold);
-            transition: all 0.2s ease;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.15s ease;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 3px;
             font-family: inherit;
             white-space: nowrap;
             line-height: 1;
+            flex-shrink: 0;
         }
 
-        .btn:active { transform: scale(0.97); }
+        .btn:active { transform: scale(0.95); }
 
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-dark); }
-
         .btn-success { background: var(--success); color: white; }
         .btn-success:hover { background: var(--success-dark); }
-
         .btn-warning { background: var(--warning); color: white; }
         .btn-warning:hover { background: var(--warning-dark); }
-
         .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: var(--danger-dark); }
-
+        .btn-excel { background: var(--excel); color: white; }
+        .btn-excel:hover { background: var(--excel-dark); }
         .btn-outline {
             background: white;
             color: var(--text-medium);
-            border: 1px solid var(--border-dark);
+            border: 1px solid #cbd5e1;
         }
-        .btn-outline:hover { background: var(--table-row-hover); border-color: var(--text-light); }
+        .btn-outline:hover { background: #f8fafc; }
 
-        /* === MANUAL FORM === */
+        /* === MANUAL FORM COMPACT === */
         .manual-form {
             display: none;
             flex-wrap: wrap;
-            gap: 10px;
-            padding: 16px 28px;
+            gap: 6px;
+            padding: 8px;
             background: #fffbeb;
             border-bottom: 1px solid #fde68a;
             align-items: center;
-            animation: slideDown 0.25s ease;
         }
 
         .manual-form.show { display: flex; }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .manual-form input {
-            padding: 9px 12px;
-            border: 1px solid var(--border-dark);
-            border-radius: var(--radius-md);
-            font-size: var(--fs-base);
+            padding: 7px 9px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 12px;
             font-family: inherit;
-            font-weight: var(--fw-medium);
+            font-weight: 600;
             color: var(--text-dark);
-            transition: border 0.2s;
+            flex: 1;
+            min-width: 0;
         }
 
         .manual-form input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+            box-shadow: 0 0 0 2px rgba(99,102,241,0.15);
         }
 
-        .manual-form input[type="text"] { flex: 1; min-width: 180px; }
-        .manual-form input[type="number"] { width: 110px; }
+        .manual-form input[type="number"] { flex: 0 0 70px; }
 
-        /* === TABLE WRAPPER === */
+        .manual-form .btn {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+        /* === WARNING BANNER COMPACT === */
+        .warning-banner {
+            display: none;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-bottom: 1px solid #fca5a5;
+            color: var(--danger-dark);
+            font-size: 11px;
+            font-weight: 700;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.3;
+        }
+
+        .warning-banner.show { display: flex; }
+        .warning-banner .icon { font-size: 14px; flex-shrink: 0; }
+
+        /* === TABLE COMPACT === */
         .table-wrapper {
-            padding: 0 28px 28px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-        }
-
-        .table-wrapper::-webkit-scrollbar {
-            height: 8px;
-        }
-        .table-wrapper::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 4px;
-        }
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .table-wrapper::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: white;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
-            min-width: 700px;
+            min-width: 100%;
+            table-layout: fixed;
         }
 
+        col.c-no     { width: 26px; }
+        col.c-name   { width: auto; }
+        col.c-qty    { width: 42px; }
+        col.c-price  { width: 62px; }
+        col.c-total  { width: 76px; }
+        col.c-action { width: 52px; }
+
         th, td {
-            padding: 12px 8px;
+            padding: 6px 3px;
             text-align: center;
-            font-size: var(--fs-base);
-            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
         }
 
         thead th {
-            background: var(--table-header-bg);
+            background: #f8fafc;
             color: var(--text-medium);
-            font-weight: var(--fw-bold);
-            font-size: var(--fs-sm);
+            font-weight: 800;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.3px;
+            padding: 6px 3px;
             border-bottom: 2px solid var(--primary);
-            padding: 12px 8px;
+            position: sticky;
+            top: 0;
         }
 
-        tbody tr { transition: background-color 0.15s; }
-        tbody tr:hover { background: var(--table-row-hover); }
-
-        th:nth-child(1), td:nth-child(1) {
-            width: 40px;
-            color: var(--text-light);
-            font-size: var(--fs-sm);
-            font-weight: var(--fw-medium);
-        }
-
-        th:nth-child(2), td:nth-child(2) {
+        tbody td:nth-child(2) {
             text-align: left;
-            font-weight: var(--fw-bold);
-            color: var(--text-dark);
-            max-width: 220px;
-            font-size: var(--fs-base);
-            padding-left: 12px;
+            font-weight: 700;
+            font-size: 11px;
+            padding-left: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        th:nth-child(3), td:nth-child(3) { width: 80px; }
-        th:nth-child(4), td:nth-child(4) { width: 130px; }
-        th:nth-child(5), td:nth-child(5) { width: 130px; }
-        th:nth-child(6), td:nth-child(6) { width: 90px; }
+        tbody td:nth-child(1) {
+            color: var(--text-light);
+            font-size: 10px;
+            font-weight: 600;
+        }
 
-        /* === INPUT TRIGGER === */
+        tbody tr:active { background: #f8fafc; }
+
+        /* === INPUT TRIGGER COMPACT === */
         .input-trigger {
             display: inline-block;
-            padding: 6px 10px;
+            padding: 3px 5px;
             background: #f1f5f9;
-            border: 1px solid transparent;
-            border-radius: var(--radius-md);
-            font-size: var(--fs-base);
-            font-weight: var(--fw-bold);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
             color: var(--primary);
             cursor: pointer;
-            transition: all 0.15s;
-            min-width: 45px;
+            min-width: 28px;
             text-align: center;
+            line-height: 1.2;
         }
 
-        .input-trigger:hover {
-            background: #e2e8f0;
-            border-color: var(--primary);
-        }
+        .input-trigger:active { background: #e2e8f0; }
 
         .input-trigger.price-trigger {
             color: var(--success-dark);
             background: #f0fdf4;
         }
 
-        .input-trigger.price-trigger:hover {
-            background: #dcfce7;
-            border-color: var(--success);
-        }
-
-        /* === CURRENCY === */
+        /* === CURRENCY COMPACT === */
         .currency {
-            white-space: nowrap;
             font-family: 'Courier New', monospace;
-            font-weight: var(--fw-bold);
+            font-weight: 700;
+            font-size: 10px;
             color: var(--text-dark);
-            font-size: var(--fs-base);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
         }
 
-        /* === TOTAL ROW === */
-        .total-row {
+        /* === ACTION CELL COMPACT === */
+        .action-cell {
+            display: flex;
+            gap: 1px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            background: transparent;
+            border: none;
+            padding: 4px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .btn-edit { color: var(--warning); }
+        .btn-trash { color: var(--text-light); }
+
+        .btn-action:active { background: #f1f5f9; }
+
+        /* === TOTAL & RAB ROWS COMPACT === */
+        tfoot tr.total-row {
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
         }
 
-        .total-row td {
-            padding: 16px 10px;
-            font-weight: var(--fw-black);
-            font-size: var(--fs-md);
+        tfoot tr.total-row td {
+            padding: 8px 6px;
+            font-weight: 800;
+            font-size: 11px;
             color: var(--success-dark);
             border-top: 2px solid var(--success);
             border-bottom: none;
         }
 
         #grandTotal {
-            font-size: var(--fs-xl);
+            font-size: 13px;
             color: var(--danger);
             font-family: 'Courier New', monospace;
-            font-weight: var(--fw-black);
+            font-weight: 800;
         }
 
-        /* === RAB ROW === */
-        .rab-row {
+        tfoot tr.rab-row {
             background: #fef3c7;
         }
 
-        .rab-row td {
-            padding: 14px 10px;
-            font-weight: var(--fw-black);
-            font-size: var(--fs-md);
+        tfoot tr.rab-row td {
+            padding: 7px 6px;
+            font-weight: 800;
+            font-size: 11px;
             color: var(--warning-dark);
-            border-top: 1px solid #fde68a;
             border-bottom: none;
         }
 
         .rab-input-wrapper {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 3px;
             background: white;
-            border: 2px solid #fcd34d;
-            border-radius: var(--radius-md);
-            padding: 4px 12px;
-            transition: border-color 0.2s;
-        }
-
-        .rab-input-wrapper:focus-within {
-            border-color: var(--warning-dark);
-            box-shadow: 0 0 0 3px rgba(234,179,8,0.15);
+            border: 1.5px solid #fcd34d;
+            border-radius: 6px;
+            padding: 3px 6px;
         }
 
         .rab-input-wrapper .prefix {
-            font-size: var(--fs-sm);
-            font-weight: var(--fw-bold);
+            font-size: 10px;
+            font-weight: 800;
             color: var(--warning-dark);
             font-family: 'Courier New', monospace;
         }
@@ -394,57 +370,51 @@
         #rabInput {
             border: none;
             outline: none;
-            font-size: var(--fs-md);
-            font-weight: var(--fw-black);
+            font-size: 11px;
+            font-weight: 800;
             color: var(--warning-dark);
             font-family: 'Courier New', monospace;
-            width: 130px;
+            width: 70px;
             text-align: right;
             background: transparent;
-            padding: 4px 0;
+            padding: 0;
         }
 
-        /* === SELISIH ROW === */
-        .selisih-row {
+        tfoot tr.selisih-row {
             background: #f8fafc;
         }
 
-        .selisih-row td {
-            padding: 14px 10px;
-            font-weight: var(--fw-bold);
-            font-size: var(--fs-base);
+        tfoot tr.selisih-row td {
+            padding: 7px 6px;
+            font-weight: 700;
+            font-size: 10px;
             color: var(--text-medium);
-            border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
         }
 
         #selisihValue {
-            font-size: var(--fs-lg);
+            font-size: 11px;
             font-family: 'Courier New', monospace;
-            font-weight: var(--fw-black);
+            font-weight: 800;
         }
 
         #selisihValue.aman { color: var(--success-dark); }
         #selisihValue.lebih { color: var(--danger); }
 
-        /* === STATUS BADGE === */
+        /* === STATUS BADGE COMPACT === */
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
+            gap: 3px;
+            padding: 2px 6px;
             border-radius: 999px;
-            font-size: var(--fs-sm);
-            font-weight: var(--fw-black);
+            font-size: 9px;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
-        .status-badge.aman {
-            background: #dcfce7;
-            color: var(--success-dark);
-        }
-
+        .status-badge.aman { background: #dcfce7; color: var(--success-dark); }
         .status-badge.lebih {
             background: #fee2e2;
             color: var(--danger-dark);
@@ -456,59 +426,33 @@
             50% { opacity: 0.6; }
         }
 
-        /* === WARNING BANNER === */
-        .warning-banner {
-            display: none;
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            border-bottom: 1px solid #fca5a5;
-            color: var(--danger-dark);
-            font-size: var(--fs-md);
-            font-weight: var(--fw-bold);
-            align-items: center;
-            gap: 10px;
-            animation: slideDown 0.3s ease;
+        /* === EMPTY STATE COMPACT === */
+        .empty-state {
+            text-align: center;
+            padding: 30px 16px;
+            color: var(--text-light);
         }
 
-        .warning-banner.show { display: flex; }
-
-        .warning-banner .icon {
-            font-size: var(--fs-xl);
-            animation: shake 0.5s ease;
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            opacity: 0.3;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            75% { transform: rotate(10deg); }
+        .empty-state .title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-medium);
+            margin-bottom: 4px;
         }
 
-        /* === ACTION CELL === */
-        .action-cell {
-            display: flex;
-            gap: 4px;
-            justify-content: center;
-            align-items: center;
+        .empty-state .subtitle {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
-        .btn-action {
-            background: transparent;
-            border: none;
-            padding: 6px 10px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: var(--fs-lg);
-            line-height: 1;
-            transition: all 0.15s;
-        }
-
-        .btn-edit { color: var(--warning); }
-        .btn-edit:hover { background: #fef9c3; transform: scale(1.1); }
-
-        .btn-trash { color: var(--text-light); }
-        .btn-trash:hover { background: #fee2e2; color: var(--danger); transform: scale(1.1); }
-
-        /* === MODAL === */
+        /* === MODAL COMPACT === */
         .modal {
             display: none;
             position: fixed;
@@ -517,175 +461,146 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(3px);
-            animation: fadeIn 0.2s ease;
-            padding: 16px;
+            padding: 12px;
         }
 
         .modal.active { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .modal-box {
             background: white;
-            padding: 28px;
-            border-radius: var(--radius-xl);
+            padding: 16px;
+            border-radius: 12px;
             width: 100%;
-            max-width: 380px;
-            box-shadow: var(--shadow-lg);
+            max-width: 340px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             text-align: center;
-            animation: slideUp 0.25s ease;
             max-height: 90vh;
             overflow-y: auto;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         .modal-title {
-            font-size: var(--fs-lg);
+            font-size: 13px;
             color: var(--text-dark);
-            margin-bottom: 5px;
-            font-weight: var(--fw-black);
+            margin-bottom: 3px;
+            font-weight: 800;
         }
 
         .modal-subtitle {
-            font-size: var(--fs-base);
+            font-size: 11px;
             color: var(--text-light);
-            margin-bottom: 18px;
-            font-weight: var(--fw-medium);
+            margin-bottom: 12px;
+            font-weight: 600;
         }
 
         .modal-input {
             width: 100%;
-            padding: 16px;
-            font-size: var(--fs-3xl);
+            padding: 12px;
+            font-size: 22px;
             text-align: center;
             border: 2px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            font-weight: var(--fw-black);
+            border-radius: 10px;
+            margin-bottom: 14px;
+            font-weight: 800;
             color: var(--primary);
             font-family: 'Courier New', monospace;
-            transition: border-color 0.2s;
         }
 
         .modal-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
 
         .modal-buttons {
             display: flex;
-            gap: 10px;
+            gap: 6px;
         }
 
         .modal-buttons .btn {
             flex: 1;
-            padding: 13px;
-            font-size: var(--fs-md);
+            padding: 10px;
+            font-size: 12px;
             justify-content: center;
         }
 
-        /* === EDIT FORM GROUP === */
+        /* === EDIT FORM COMPACT === */
         .edit-form-group {
             text-align: left;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
 
         .edit-form-group label {
             display: block;
-            font-size: var(--fs-sm);
-            font-weight: var(--fw-bold);
+            font-size: 10px;
+            font-weight: 800;
             color: var(--text-medium);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.3px;
         }
 
         .edit-form-group input {
             width: 100%;
-            padding: 12px 14px;
-            font-size: var(--fs-md);
-            border: 2px solid var(--border);
-            border-radius: var(--radius-md);
+            padding: 9px 11px;
+            font-size: 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
             font-family: inherit;
-            font-weight: var(--fw-medium);
+            font-weight: 600;
             color: var(--text-dark);
-            transition: all 0.2s;
-            box-sizing: border-box;
         }
 
         .edit-form-group input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
 
         .edit-form-group input.price-field {
             font-family: 'Courier New', monospace;
-            font-weight: var(--fw-bold);
+            font-weight: 800;
             color: var(--success-dark);
         }
 
         /* === CONFIRM MODAL === */
-        .confirm-modal .modal-box {
-            max-width: 420px;
-            text-align: left;
-        }
+        .confirm-modal .modal-box { text-align: left; }
 
         .confirm-modal .modal-title {
-            font-size: var(--fs-xl);
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .confirm-modal .modal-title .icon {
-            font-size: var(--fs-2xl);
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
         .confirm-modal .modal-message {
-            font-size: var(--fs-md);
+            font-size: 12px;
             color: var(--text-medium);
-            line-height: 1.6;
-            margin-bottom: 22px;
-            font-weight: var(--fw-medium);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            font-weight: 600;
         }
 
-        .confirm-modal .modal-message strong {
-            color: var(--danger);
-            font-weight: var(--fw-bold);
-        }
+        .confirm-modal .modal-message strong { color: var(--danger); }
 
-        /* === TOAST === */
+        /* === TOAST COMPACT === */
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 16px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
+            transform: translateX(-50%) translateY(80px);
             background: var(--text-dark);
             color: white;
-            padding: 14px 24px;
-            border-radius: var(--radius-lg);
-            font-size: var(--fs-md);
-            font-weight: var(--fw-bold);
-            box-shadow: var(--shadow-lg);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             opacity: 0;
-            transition: all 0.35s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transition: all 0.3s ease;
             z-index: 2000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
             max-width: 90%;
+            text-align: center;
         }
 
         .toast.show {
@@ -696,158 +611,48 @@
         .toast.success { background: var(--success-dark); }
         .toast.error { background: var(--danger); }
         .toast.info { background: var(--primary); }
-        .toast.warning { background: var(--warning-dark); }
 
-        /* === EMPTY STATE === */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-light);
+        /* === RESPONSIVE === */
+        @media (max-width: 380px) {
+            .header h1 { font-size: 13px; }
+            .header-info { font-size: 8px; max-width: 100px; }
+            .btn { padding: 5px 7px; font-size: 10px; }
+            th, td { padding: 5px 2px; }
+            thead th { font-size: 8px; }
+            tbody td:nth-child(2) { font-size: 10px; }
         }
 
-        .empty-state .icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.3;
-        }
-
-        .empty-state .title {
-            font-size: var(--fs-lg);
-            font-weight: var(--fw-bold);
-            color: var(--text-medium);
-            margin-bottom: 6px;
-        }
-
-        .empty-state .subtitle {
-            font-size: var(--fs-base);
-            font-weight: var(--fw-medium);
-        }
-
-        .empty-state .btn {
-            margin-top: 20px;
-        }
-
-        /* === RESPONSIVE MOBILE - TETAP HORIZONTAL === */
-        @media (max-width: 768px) {
-            body { padding: 0; }
-            .container { border-radius: 0; }
-            
-            .header { padding: 16px 18px; }
-            .header h1 { font-size: var(--fs-xl); }
-            .header h1 .icon { font-size: var(--fs-xl); }
-            .header-info { font-size: var(--fs-xs); }
-
-            .toolbar {
-                padding: 12px 16px;
-                justify-content: center;
+        /* Desktop view */
+        @media (min-width: 768px) {
+            body { 
+                display: flex; 
+                justify-content: center; 
+                padding: 20px;
+                background: var(--bg);
             }
-            
-            .toolbar-separator { display: none; }
-            
-            .btn {
-                padding: 9px 12px;
-                font-size: var(--fs-md);
+            .container {
+                max-width: 900px;
+                min-height: auto;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             }
-
-            .table-wrapper {
-                padding: 0 12px 20px;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            table {
-                min-width: 720px;
-            }
-
-            th, td { 
-                padding: 10px 6px; 
-                font-size: var(--fs-sm);
-            }
-            
-            thead th { 
-                font-size: var(--fs-xs);
-                padding: 10px 6px;
-            }
-
-            th:nth-child(2), td:nth-child(2) {
-                max-width: 180px;
-                font-size: var(--fs-sm);
-            }
-            
-            .input-trigger { 
-                padding: 6px 8px; 
-                font-size: var(--fs-sm);
-                min-width: 40px;
-            }
-
-            .currency { font-size: var(--fs-sm); }
-            
-            .manual-form {
-                padding: 14px 16px;
-                flex-direction: column;
-            }
-            .manual-form input { width: 100% !important; }
-            .manual-form .btn { width: 100%; justify-content: center; }
-            
-            .total-row td { 
-                padding: 14px 8px; 
-                font-size: var(--fs-sm); 
-            }
-            #grandTotal { font-size: var(--fs-base); }
-
-            .rab-row td { 
-                padding: 12px 8px; 
-                font-size: var(--fs-sm); 
-            }
-            .rab-input-wrapper { padding: 3px 8px; }
-            #rabInput { 
-                width: 100px; 
-                font-size: var(--fs-sm);
-            }
-
-            .selisih-row td { 
-                padding: 12px 8px; 
-                font-size: var(--fs-xs); 
-            }
-            #selisihValue { font-size: var(--fs-sm); }
-
-            .status-badge { 
-                padding: 4px 10px; 
-                font-size: 10px; 
-            }
-
-            .warning-banner { 
-                padding: 12px 16px; 
-                font-size: var(--fs-sm); 
-            }
-
-            .action-cell { 
-                flex-direction: row; 
-                gap: 2px; 
-            }
-            .btn-action { 
-                padding: 4px 6px; 
-                font-size: var(--fs-md); 
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header { 
-                flex-direction: column; 
-                align-items: flex-start; 
-            }
-            .header-info { 
-                text-align: left; 
-                width: 100%; 
-            }
-
-            .btn .btn-text {
-                display: none;
-            }
-
-            table {
-                min-width: 680px;
-            }
+            .header { padding: 14px 20px; }
+            .header h1 { font-size: 18px; }
+            .header h1 .icon { font-size: 20px; }
+            .header-info { font-size: 11px; max-width: none; }
+            .toolbar { padding: 10px 16px; gap: 6px; }
+            .btn { padding: 8px 12px; font-size: 12px; }
+            th, td { padding: 8px 6px; font-size: 12px; }
+            thead th { font-size: 10px; padding: 8px 6px; }
+            tbody td:nth-child(2) { font-size: 12px; padding-left: 10px; }
+            .input-trigger { padding: 4px 8px; font-size: 12px; min-width: 36px; }
+            .currency { font-size: 12px; }
+            .btn-action { font-size: 15px; padding: 5px 6px; }
+            .empty-state { padding: 50px 20px; }
+            .empty-state .icon { font-size: 56px; }
+            .empty-state .title { font-size: 16px; }
+            .empty-state .subtitle { font-size: 13px; }
         }
     </style>
 </head>
@@ -858,21 +663,19 @@
     <div class="header">
         <h1>
             <span class="icon"><i class="ti-shopping-cart"></i></span>
-            Estimasi Belanja Praktik
+            Estimasi Belanja
         </h1>
-        <div class="header-info">
-            <div id="lastSaved">Belum disimpan</div>
-        </div>
+        <div class="header-info" id="lastSaved">Belum disimpan</div>
     </div>
 
-    <!-- Toolbar -->
+    <!-- Toolbar Compact dengan Label -->
     <div class="toolbar">
         <div class="toolbar-group">
-            <button class="btn btn-primary" onclick="saveToLocal()" title="Simpan ke penyimpanan lokal">
-                <i class="ti-save"></i><span class="btn-text">Simpan</span>
+            <button class="btn btn-primary" onclick="saveToLocal()" title="Simpan data">
+                <i class="ti-save"></i> Simpan
             </button>
             <button class="btn btn-outline" onclick="newData()" title="Buat data baru">
-                <i class="ti-file"></i><span class="btn-text">Baru</span>
+                <i class="ti-file"></i> Baru
             </button>
         </div>
 
@@ -880,21 +683,21 @@
 
         <div class="toolbar-group">
             <button class="btn btn-success" onclick="exportPDF()" title="Ekspor ke PDF">
-                <i class="ti-receipt"></i><span class="btn-text">PDF</span>
+                <i class="ti-receipt"></i> PDF
             </button>
             <button class="btn btn-success" onclick="exportExcel()" title="Ekspor ke Excel">
-                <i class="ti-layout-grid2"></i><span class="btn-text">Excel</span>
+                <i class="ti-layout-grid2"></i> XLS
             </button>
         </div>
 
         <div class="toolbar-separator"></div>
 
         <div class="toolbar-group">
-            <button class="btn btn-outline" onclick="downloadTemplate()" title="Download template Excel">
-                <i class="ti-download"></i>
+            <button class="btn btn-outline" onclick="downloadTemplate()" title="Download Template Excel">
+                <i class="ti-download"></i> Template
             </button>
-            <label for="fileInput" class="btn btn-outline" style="margin:0; cursor:pointer;" title="Import dari Excel">
-                <i class="ti-upload"></i>
+            <label for="fileInput" class="btn btn-excel" style="margin:0; cursor:pointer;" title="Import dari Excel">
+                <i class="ti-import"></i> Excel
                 <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;" onchange="handleFileUpload(event)">
             </label>
         </div>
@@ -902,35 +705,43 @@
         <div class="toolbar-separator"></div>
 
         <div class="toolbar-group">
-            <button class="btn btn-warning" onclick="toggleManualForm()" title="Tambah bahan manual">
-                <i class="ti-plus"></i><span class="btn-text">Tambah Bahan</span>
+            <button class="btn btn-warning" onclick="toggleManualForm()" title="Tambah bahan">
+                <i class="ti-plus"></i> Bahan
             </button>
         </div>
     </div>
 
     <!-- Form Tambah Manual -->
     <div id="manualForm" class="manual-form">
-        <input type="text" id="newName" placeholder="Nama Bahan">
-        <input type="number" id="newQty" placeholder="Jumlah" min="0" value="1">
-        <input type="number" id="newPrice" placeholder="Harga Satuan" min="0" value="0">
-        <button class="btn btn-success" onclick="addManualData()"><i class="ti-check"></i> Simpan</button>
-        <button class="btn btn-outline" onclick="toggleManualForm()"><i class="ti-close"></i> Batal</button>
+        <input type="text" id="newName" placeholder="Nama bahan">
+        <input type="number" id="newQty" placeholder="Qty" min="0" value="1">
+        <input type="number" id="newPrice" placeholder="Harga" min="0" value="0">
+        <button class="btn btn-success" onclick="addManualData()"><i class="ti-check"></i></button>
+        <button class="btn btn-outline" onclick="toggleManualForm()"><i class="ti-close"></i></button>
     </div>
 
     <!-- Warning Banner -->
     <div class="warning-banner" id="warningBanner">
         <span class="icon"><i class="ti-alert"></i></span>
-        <span>PERHATIAN: Total estimasi telah <strong>MELEBIHI</strong> anggaran RAB! Segera tinjau kembali daftar belanja Anda.</span>
+        <span>Total melebihi RAB!</span>
     </div>
 
     <!-- Table -->
     <div class="table-wrapper">
         <table id="priceTable">
+            <colgroup>
+                <col class="c-no">
+                <col class="c-name">
+                <col class="c-qty">
+                <col class="c-price">
+                <col class="c-total">
+                <col class="c-action">
+            </colgroup>
             <thead>
                 <tr>
-                    <th rowspan="2">No</th>
-                    <th rowspan="2">Nama Bahan</th>
-                    <th rowspan="2">Jumlah</th>
+                    <th rowspan="2">#</th>
+                    <th rowspan="2" style="text-align:left; padding-left:6px;">Nama Bahan</th>
+                    <th rowspan="2">Qty</th>
                     <th colspan="2">Harga</th>
                     <th rowspan="2">Aksi</th>
                 </tr>
@@ -940,35 +751,32 @@
                 </tr>
             </thead>
             <tbody id="tableBody">
-                <!-- Data diisi JavaScript (kosong secara default) -->
+                <!-- Data diisi JavaScript -->
             </tbody>
             <tfoot>
-                <!-- Total Estimasi -->
                 <tr class="total-row">
-                    <td colspan="4" style="text-align: right; padding-right: 20px;">TOTAL ESTIMASI</td>
+                    <td colspan="4" style="text-align: right; padding-right: 6px;">TOTAL</td>
                     <td id="grandTotal">Rp 0</td>
                     <td></td>
                 </tr>
-                <!-- Anggaran RAB -->
                 <tr class="rab-row">
-                    <td colspan="4" style="text-align: right; padding-right: 20px;">
-                        <i class="ti-wallet" style="margin-right:6px;"></i>ANGGARAN RAB
+                    <td colspan="4" style="text-align: right; padding-right: 6px;">
+                        <i class="ti-wallet"></i> RAB
                     </td>
-                    <td colspan="2" style="text-align: left; padding-left: 10px;">
+                    <td colspan="2" style="text-align: left; padding-left: 6px;">
                         <div class="rab-input-wrapper">
                             <span class="prefix">Rp</span>
                             <input type="text" id="rabInput" inputmode="numeric" placeholder="0" value="0">
                         </div>
                     </td>
                 </tr>
-                <!-- Selisih -->
                 <tr class="selisih-row">
-                    <td colspan="4" style="text-align: right; padding-right: 20px;">
-                        <i class="ti-stats-up" style="margin-right:6px;"></i>SELISIH
+                    <td colspan="4" style="text-align: right; padding-right: 6px;">
+                        <i class="ti-stats-up"></i> SELISIH
                     </td>
-                    <td colspan="2" style="text-align: left; padding-left: 10px;">
+                    <td colspan="2" style="text-align: left; padding-left: 6px;">
                         <span id="selisihValue">Rp 0</span>
-                        <span id="statusBadge" class="status-badge aman" style="margin-left: 10px;">
+                        <span id="statusBadge" class="status-badge aman" style="margin-left: 4px;">
                             <i class="ti-check"></i> AMAN
                         </span>
                     </td>
@@ -981,7 +789,7 @@
 <!-- Modal Input Angka -->
 <div class="modal" id="inputModal">
     <div class="modal-box">
-        <div class="modal-title" id="modalTitle">Edit Jumlah</div>
+        <div class="modal-title" id="modalTitle">Edit</div>
         <div class="modal-subtitle" id="modalSubtitle">Nama Bahan</div>
         <input type="text" id="modalInput" class="modal-input" inputmode="numeric">
         <div class="modal-buttons">
@@ -993,9 +801,10 @@
 
 <!-- Modal Edit Bahan -->
 <div class="modal" id="editModal">
-    <div class="modal-box" style="max-width:420px; text-align:left;">
-        <div class="modal-title" style="display:flex; align-items:center; gap:8px;"><i class="ti-pencil" style="color:var(--warning);"></i> Edit Bahan</div>
-        <div class="modal-subtitle" id="editModalSubtitle" style="text-align:left;">Ubah detail bahan</div>
+    <div class="modal-box" style="text-align:left;">
+        <div class="modal-title" style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+            <i class="ti-pencil" style="color:var(--warning);"></i> Edit Bahan
+        </div>
         
         <div class="edit-form-group">
             <label for="editName">Nama Bahan</label>
@@ -1008,11 +817,11 @@
         </div>
         
         <div class="edit-form-group">
-            <label for="editPrice">Harga Satuan (Rp)</label>
+            <label for="editPrice">Harga Satuan</label>
             <input type="text" id="editPrice" class="price-field" placeholder="0" inputmode="numeric">
         </div>
         
-        <div class="modal-buttons" style="margin-top: 20px;">
+        <div class="modal-buttons" style="margin-top: 12px;">
             <button class="btn btn-outline" onclick="closeEditModal()">Batal</button>
             <button class="btn btn-primary" onclick="saveEditModal()">Simpan</button>
         </div>
@@ -1023,20 +832,18 @@
 <div class="modal confirm-modal" id="confirmModal">
     <div class="modal-box">
         <div class="modal-title">
-            <span class="icon"><i class="ti-alert" style="color:var(--warning);"></i></span>
+            <i class="ti-alert" style="color:var(--warning);"></i>
             <span id="confirmTitleText">Konfirmasi</span>
         </div>
-        <div class="modal-message" id="confirmMessage">
-            Apakah Anda yakin?
-        </div>
+        <div class="modal-message" id="confirmMessage">Apakah Anda yakin?</div>
         <div class="modal-buttons">
             <button class="btn btn-outline" onclick="closeConfirm()">Batal</button>
-            <button class="btn btn-danger" id="confirmOkBtn" onclick="confirmOk()">Ya, Lanjutkan</button>
+            <button class="btn btn-danger" id="confirmOkBtn" onclick="confirmOk()">Ya</button>
         </div>
     </div>
 </div>
 
-<!-- Toast Notification -->
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1045,7 +852,6 @@
     const STORAGE_TIME_KEY = 'estimasi_belanja_saved_at';
     const STORAGE_RAB_KEY = 'estimasi_belanja_rab';
 
-    // Data awal KOSONG
     let items = [];
     let rabValue = 0;
     let currentEditIndex = null;
@@ -1070,7 +876,6 @@
     const editName = document.getElementById('editName');
     const editQty = document.getElementById('editQty');
     const editPrice = document.getElementById('editPrice');
-    const editModalSubtitle = document.getElementById('editModalSubtitle');
     const confirmModal = document.getElementById('confirmModal');
     const toast = document.getElementById('toast');
     const lastSavedEl = document.getElementById('lastSaved');
@@ -1098,7 +903,7 @@
         toast.className = 'toast show ' + type;
         setTimeout(() => {
             toast.classList.remove('show');
-        }, 3000);
+        }, 2500);
     }
 
     // ==================== LOCAL STORAGE ====================
@@ -1108,15 +913,15 @@
             localStorage.setItem(STORAGE_RAB_KEY, rabValue.toString());
             const now = new Date();
             const timeStr = now.toLocaleString('id-ID', {
-                day: '2-digit', month: 'short', year: 'numeric',
+                day: '2-digit', month: 'short',
                 hour: '2-digit', minute: '2-digit'
             });
             localStorage.setItem(STORAGE_TIME_KEY, timeStr);
-            lastSavedEl.textContent = 'Tersimpan: ' + timeStr;
-            if (!silent) showToast('Data berhasil disimpan', 'success');
+            lastSavedEl.textContent = '✓ ' + timeStr;
+            if (!silent) showToast('Data disimpan', 'success');
             return true;
         } catch (e) {
-            showToast('Gagal menyimpan data', 'error');
+            showToast('Gagal menyimpan', 'error');
             return false;
         }
     }
@@ -1128,7 +933,7 @@
             const savedRab = localStorage.getItem(STORAGE_RAB_KEY);
             if (saved) {
                 items = JSON.parse(saved);
-                if (savedTime) lastSavedEl.textContent = 'Tersimpan: ' + savedTime;
+                if (savedTime) lastSavedEl.textContent = '✓ ' + savedTime;
                 if (savedRab) {
                     rabValue = parseInt(savedRab) || 0;
                     rabInput.value = formatNumber(rabValue);
@@ -1136,7 +941,7 @@
                 return true;
             }
         } catch (e) {
-            console.error('Gagal memuat data:', e);
+            console.error('Gagal memuat:', e);
         }
         return false;
     }
@@ -1146,17 +951,16 @@
         tableBody.innerHTML = "";
         let grandTotal = 0;
 
-        // Jika tidak ada data, tampilkan empty state
         if (items.length === 0) {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="6" style="padding: 0; border: none;">
                         <div class="empty-state">
                             <div class="icon"><i class="ti-shopping-cart"></i></div>
-                            <div class="title">Belum Ada Data Bahan</div>
-                            <div class="subtitle">Klik "Tambah Bahan" atau import dari Excel untuk memulai</div>
-                            <button class="btn btn-warning" onclick="toggleManualForm()" style="margin-top: 20px;">
-                                <i class="ti-plus"></i> Tambah Bahan Pertama
+                            <div class="title">Belum Ada Data</div>
+                            <div class="subtitle">Tambah bahan untuk memulai</div>
+                            <button class="btn btn-warning" onclick="toggleManualForm()">
+                                <i class="ti-plus"></i> Tambah Bahan
                             </button>
                         </div>
                     </td>
@@ -1176,7 +980,7 @@
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${item.no}</td>
-                <td>${item.name}</td>
+                <td title="${item.name}">${item.name}</td>
                 <td>
                     <span class="input-trigger" onclick="openModal(${index}, 'qty')">${item.qty}</span>
                 </td>
@@ -1186,7 +990,7 @@
                 <td class="currency">${formatRupiah(rowTotal)}</td>
                 <td>
                     <div class="action-cell">
-                        <button class="btn-action btn-edit" onclick="openEditModal(${index})" title="Edit bahan"><i class="ti-pencil"></i></button>
+                        <button class="btn-action btn-edit" onclick="openEditModal(${index})" title="Edit"><i class="ti-pencil"></i></button>
                         <button class="btn-action btn-trash" onclick="deleteItem(${index})" title="Hapus"><i class="ti-trash"></i></button>
                     </div>
                 </td>
@@ -1198,7 +1002,7 @@
         updateComparison(grandTotal);
     }
 
-    // ==================== COMPARISON LOGIC ====================
+    // ==================== COMPARISON ====================
     function updateComparison(grandTotal) {
         const selisih = rabValue - grandTotal;
         const isOver = grandTotal > rabValue && rabValue > 0;
@@ -1208,7 +1012,7 @@
             selisihValue.textContent = 'Rp 0';
             selisihValue.className = '';
             statusBadge.className = 'status-badge aman';
-            statusBadge.innerHTML = '<i class="ti-info-alt"></i> RAB BELUM DISET';
+            statusBadge.innerHTML = 'BELUM SET';
             warningBanner.classList.remove('show');
             lastWarningState = null;
             return;
@@ -1219,33 +1023,29 @@
         if (isOver) {
             selisihValue.className = 'lebih';
             statusBadge.className = 'status-badge lebih';
-            statusBadge.innerHTML = '<i class="ti-alert"></i> MELEBIHI';
+            statusBadge.innerHTML = 'LEBIH';
             warningBanner.classList.add('show');
-
             if (lastWarningState !== 'over') {
-                showToast('Total estimasi melebihi anggaran RAB!', 'error');
+                showToast('Total melebihi RAB!', 'error');
                 lastWarningState = 'over';
             }
         } else if (isEqual) {
             selisihValue.className = 'aman';
             statusBadge.className = 'status-badge aman';
-            statusBadge.innerHTML = '<i class="ti-check"></i> PAS';
+            statusBadge.innerHTML = 'PAS';
             warningBanner.classList.remove('show');
             lastWarningState = 'equal';
         } else {
             selisihValue.className = 'aman';
             statusBadge.className = 'status-badge aman';
-            statusBadge.innerHTML = '<i class="ti-check"></i> AMAN';
+            statusBadge.innerHTML = 'AMAN';
             warningBanner.classList.remove('show');
             lastWarningState = 'safe';
         }
     }
 
     rabInput.addEventListener('input', function() {
-        const cursorPos = this.selectionStart;
-        const oldLength = this.value.length;
         const rawValue = this.value.replace(/\./g, '');
-
         if (rawValue === '') {
             this.value = '';
             rabValue = 0;
@@ -1254,21 +1054,14 @@
             this.value = formatNumber(num);
             rabValue = num;
         }
-
-        const newLength = this.value.length;
-        const newPos = cursorPos + (newLength - oldLength);
-        this.setSelectionRange(newPos, newPos);
-
         let grandTotal = 0;
         items.forEach(item => grandTotal += item.qty * item.price);
         updateComparison(grandTotal);
     });
 
-    rabInput.addEventListener('blur', function() {
-        saveToLocal(true);
-    });
+    rabInput.addEventListener('blur', () => saveToLocal(true));
 
-    // ==================== MODAL INPUT ANGKA ====================
+    // ==================== MODAL INPUT ====================
     function openModal(index, type) {
         currentEditIndex = index;
         currentEditType = type;
@@ -1278,19 +1071,14 @@
             modalTitle.textContent = 'Edit Jumlah';
             modalSubtitle.textContent = item.name;
             modalInput.value = item.qty;
-            modalInput.setAttribute('placeholder', 'Masukkan jumlah');
         } else {
-            modalTitle.textContent = 'Edit Harga Satuan';
+            modalTitle.textContent = 'Edit Harga';
             modalSubtitle.textContent = item.name;
             modalInput.value = formatNumber(item.price);
-            modalInput.setAttribute('placeholder', 'Masukkan harga');
         }
 
         modal.classList.add('active');
-        setTimeout(() => {
-            modalInput.focus();
-            modalInput.select();
-        }, 100);
+        setTimeout(() => { modalInput.focus(); modalInput.select(); }, 100);
     }
 
     function closeModal() {
@@ -1313,25 +1101,17 @@
         closeModal();
         renderTable();
         saveToLocal(true);
-        showToast('Perubahan disimpan', 'success');
+        showToast('Disimpan', 'success');
     }
 
     modalInput.addEventListener('input', function() {
         if (currentEditType === 'price') {
-            const cursorPos = this.selectionStart;
-            const oldLength = this.value.length;
             const rawValue = this.value.replace(/\./g, '');
-
             if (rawValue === '') {
                 this.value = '';
             } else {
-                const num = parseInt(rawValue) || 0;
-                this.value = formatNumber(num);
+                this.value = formatNumber(parseInt(rawValue) || 0);
             }
-
-            const newLength = this.value.length;
-            const newPos = cursorPos + (newLength - oldLength);
-            this.setSelectionRange(newPos, newPos);
         }
     });
 
@@ -1344,21 +1124,17 @@
         if (e.target === modal) closeModal();
     });
 
-    // ==================== MODAL EDIT BAHAN ====================
+    // ==================== MODAL EDIT ====================
     function openEditModal(index) {
         currentEditItemIndex = index;
         const item = items[index];
 
-        editModalSubtitle.textContent = 'Mengedit: ' + item.name;
         editName.value = item.name;
         editQty.value = item.qty;
         editPrice.value = formatNumber(item.price);
 
         editModal.classList.add('active');
-        setTimeout(() => {
-            editName.focus();
-            editName.select();
-        }, 100);
+        setTimeout(() => { editName.focus(); editName.select(); }, 100);
     }
 
     function closeEditModal() {
@@ -1377,7 +1153,7 @@
         const newPrice = parseNumber(editPrice.value);
 
         if (!newName) {
-            showToast('Nama bahan tidak boleh kosong!', 'error');
+            showToast('Nama tidak boleh kosong', 'error');
             editName.focus();
             return;
         }
@@ -1389,24 +1165,16 @@
         closeEditModal();
         renderTable();
         saveToLocal(true);
-        showToast('Bahan berhasil diperbarui', 'success');
+        showToast('Diperbarui', 'success');
     }
 
     editPrice.addEventListener('input', function() {
-        const cursorPos = this.selectionStart;
-        const oldLength = this.value.length;
         const rawValue = this.value.replace(/\./g, '');
-
         if (rawValue === '') {
             this.value = '';
         } else {
-            const num = parseInt(rawValue) || 0;
-            this.value = formatNumber(num);
+            this.value = formatNumber(parseInt(rawValue) || 0);
         }
-
-        const newLength = this.value.length;
-        const newPos = cursorPos + (newLength - oldLength);
-        this.setSelectionRange(newPos, newPos);
     });
 
     editModal.addEventListener('click', function(e) {
@@ -1445,25 +1213,24 @@
         if (e.target === confirmModal) closeConfirm();
     });
 
-    // ==================== AKSI DATA ====================
+    // ==================== AKSI ====================
     function deleteItem(index) {
         const itemName = items[index].name;
         showConfirm(
             'Hapus Item',
-            `Apakah Anda yakin ingin menghapus <strong>"${itemName}"</strong> dari daftar?`,
+            `Hapus <strong>"${itemName}"</strong>?`,
             'Ya, Hapus',
             () => {
                 items.splice(index, 1);
                 items.forEach((item, i) => item.no = i + 1);
                 renderTable();
                 saveToLocal(true);
-                showToast('Item dihapus', 'info');
+                showToast('Dihapus', 'info');
             }
         );
     }
 
     function newData() {
-        // Jika sudah kosong, tidak perlu konfirmasi
         if (items.length === 0 && rabValue === 0) {
             showToast('Data sudah kosong', 'info');
             return;
@@ -1471,7 +1238,7 @@
 
         showConfirm(
             'Buat Data Baru',
-            `Anda akan membuat daftar belanja baru. <strong>Semua data saat ini akan dihapus.</strong><br><br>Disarankan untuk <strong>menyimpan</strong> atau <strong>mengekspor</strong> data terlebih dahulu.`,
+            `Semua data akan dihapus. Simpan/ekspor dulu jika perlu.`,
             'Ya, Buat Baru',
             () => {
                 items = [];
@@ -1483,7 +1250,7 @@
                 localStorage.removeItem(STORAGE_RAB_KEY);
                 lastSavedEl.textContent = 'Belum disimpan';
                 lastWarningState = null;
-                showToast('Data baru dibuat', 'success');
+                showToast('Data baru', 'success');
             }
         );
     }
@@ -1502,7 +1269,7 @@
         const qty = parseInt(document.getElementById('newQty').value) || 0;
         const price = parseInt(document.getElementById('newPrice').value) || 0;
 
-        if (!name) { showToast('Nama bahan harus diisi!', 'error'); return; }
+        if (!name) { showToast('Nama harus diisi', 'error'); return; }
 
         const newNo = items.length > 0 ? Math.max(...items.map(i => i.no)) + 1 : 1;
         items.push({ no: newNo, name, qty, price });
@@ -1514,7 +1281,7 @@
         toggleManualForm();
         renderTable();
         saveToLocal(true);
-        showToast('Bahan ditambahkan', 'success');
+        showToast('Ditambahkan', 'success');
     }
 
     // ==================== EXCEL ====================
@@ -1526,9 +1293,9 @@
         ];
         const ws = XLSX.utils.aoa_to_sheet(templateData);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Template Belanja");
+        XLSX.utils.book_append_sheet(wb, ws, "Template");
         ws['!cols'] = [{ wch: 5 }, { wch: 30 }, { wch: 10 }, { wch: 15 }];
-        XLSX.writeFile(wb, "Template_Estimasi_Belanja.xlsx");
+        XLSX.writeFile(wb, "Template_Belanja.xlsx");
         showToast('Template diunduh', 'success');
     }
 
@@ -1545,7 +1312,7 @@
                 const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
                 const rows = jsonData.slice(1);
 
-                if (rows.length === 0) { showToast('File Excel kosong', 'error'); return; }
+                if (rows.length === 0) { showToast('File kosong', 'error'); return; }
 
                 let newItems = [];
                 let maxNo = items.length > 0 ? Math.max(...items.map(i => i.no)) : 0;
@@ -1565,12 +1332,12 @@
                     items = items.concat(newItems);
                     renderTable();
                     saveToLocal(true);
-                    showToast(`Import ${newItems.length} data berhasil`, 'success');
+                    showToast(`Import ${newItems.length} data`, 'success');
                 } else {
-                    showToast('Format Excel tidak sesuai template', 'error');
+                    showToast('Format tidak sesuai', 'error');
                 }
             } catch (err) {
-                showToast('Gagal membaca file Excel', 'error');
+                showToast('Gagal membaca file', 'error');
             }
             fileInput.value = '';
         };
@@ -1579,7 +1346,7 @@
 
     // ==================== EXPORT EXCEL ====================
     function exportExcel() {
-        if (items.length === 0) { showToast('Tidak ada data untuk diekspor', 'error'); return; }
+        if (items.length === 0) { showToast('Tidak ada data', 'error'); return; }
 
         const data = [["No", "Nama Bahan", "Jumlah", "Harga Satuan", "Harga Jumlah"]];
         let grandTotal = 0;
@@ -1590,45 +1357,34 @@
             data.push([item.no, item.name, item.qty, item.price, rowTotal]);
         });
 
-        data.push(["", "", "", "TOTAL ESTIMASI", grandTotal]);
-        data.push(["", "", "", "ANGGARAN RAB", rabValue]);
+        data.push(["", "", "", "TOTAL", grandTotal]);
+        data.push(["", "", "", "RAB", rabValue]);
         data.push(["", "", "", "SELISIH", rabValue - grandTotal]);
-        data.push(["", "", "", "STATUS", grandTotal > rabValue && rabValue > 0 ? "MELEBIHI ANGGARAN" : "AMAN"]);
 
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Estimasi Belanja");
-        ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 10 }, { wch: 18 }, { wch: 18 }];
+        XLSX.utils.book_append_sheet(wb, ws, "Estimasi");
+        ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 10 }, { wch: 15 }, { wch: 15 }];
 
-        const now = new Date();
-        const dateStr = now.toISOString().slice(0, 10);
-        XLSX.writeFile(wb, `Estimasi_Belanja_${dateStr}.xlsx`);
-        showToast('Excel berhasil diekspor', 'success');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        XLSX.writeFile(wb, `Estimasi_${dateStr}.xlsx`);
+        showToast('Excel diekspor', 'success');
     }
 
     // ==================== EXPORT PDF ====================
     function exportPDF() {
-        if (items.length === 0) { showToast('Tidak ada data untuk diekspor', 'error'); return; }
+        if (items.length === 0) { showToast('Tidak ada data', 'error'); return; }
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
         doc.setFillColor(99, 102, 241);
-        doc.rect(0, 0, 210, 30, 'F');
+        doc.rect(0, 0, 210, 25, 'F');
         
         doc.setTextColor(255, 255, 255);
-        doc.setFontSize(18);
+        doc.setFontSize(16);
         doc.setFont(undefined, 'bold');
-        doc.text('Estimasi Belanja Praktik', 14, 18);
-        
-        doc.setFontSize(10);
-        doc.setFont(undefined, 'normal');
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('id-ID', { 
-            day: '2-digit', month: 'long', year: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
-        doc.text('Tanggal: ' + dateStr, 14, 25);
+        doc.text('Estimasi Belanja', 14, 16);
 
         const body = [];
         let grandTotal = 0;
@@ -1637,67 +1393,50 @@
             const rowTotal = item.qty * item.price;
             grandTotal += rowTotal;
             body.push([
-                item.no,
-                item.name,
-                item.qty,
+                item.no, item.name, item.qty,
                 'Rp ' + formatNumber(item.price),
                 'Rp ' + formatNumber(rowTotal)
             ]);
         });
 
         const isOver = grandTotal > rabValue && rabValue > 0;
-        const selisih = rabValue - grandTotal;
 
         doc.autoTable({
-            startY: 38,
-            head: [['No', 'Nama Bahan', 'Jumlah', 'Harga Satuan', 'Harga Jumlah']],
+            startY: 32,
+            head: [['No', 'Nama Bahan', 'Qty', 'Harga', 'Jumlah']],
             body: body,
             foot: [
-                ['', '', '', 'TOTAL ESTIMASI', 'Rp ' + formatNumber(grandTotal)],
-                ['', '', '', 'ANGGARAN RAB', 'Rp ' + formatNumber(rabValue)],
-                ['', '', '', 'SELISIH', 'Rp ' + formatNumber(Math.abs(selisih))],
-                ['', '', '', 'STATUS', isOver ? 'MELEBIHI ANGGARAN' : (rabValue > 0 ? 'AMAN' : '-')]
+                ['', '', '', 'TOTAL', 'Rp ' + formatNumber(grandTotal)],
+                ['', '', '', 'RAB', 'Rp ' + formatNumber(rabValue)],
+                ['', '', '', 'SELISIH', 'Rp ' + formatNumber(Math.abs(rabValue - grandTotal))],
+                ['', '', '', 'STATUS', isOver ? 'MELEBIHI' : 'AMAN']
             ],
             theme: 'grid',
-            headStyles: {
-                fillColor: [99, 102, 241],
-                textColor: 255,
-                fontStyle: 'bold',
-                fontSize: 10,
-                halign: 'center'
-            },
+            headStyles: { fillColor: [99, 102, 241], fontSize: 9, halign: 'center' },
             footStyles: {
                 fillColor: isOver ? [254, 226, 226] : [220, 252, 231],
                 textColor: isOver ? [153, 27, 27] : [22, 101, 52],
-                fontStyle: 'bold',
-                fontSize: 10
+                fontSize: 9
             },
-            bodyStyles: {
-                fontSize: 10,
-                textColor: [30, 41, 59]
-            },
+            bodyStyles: { fontSize: 9 },
             columnStyles: {
                 0: { halign: 'center', cellWidth: 12 },
                 1: { cellWidth: 70 },
-                2: { halign: 'center', cellWidth: 18 },
+                2: { halign: 'center', cellWidth: 15 },
                 3: { halign: 'right', cellWidth: 35 },
                 4: { halign: 'right', cellWidth: 35 }
             },
-            alternateRowStyles: {
-                fillColor: [248, 250, 252]
-            },
-            margin: { top: 38, left: 14, right: 14 }
+            margin: { top: 32, left: 14, right: 14 }
         });
 
-        const dateFile = now.toISOString().slice(0, 10);
-        doc.save(`Estimasi_Belanja_${dateFile}.pdf`);
-        showToast('PDF berhasil diekspor', 'success');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        doc.save(`Estimasi_${dateStr}.pdf`);
+        showToast('PDF diekspor', 'success');
     }
 
     // ==================== INIT ====================
     function init() {
-        const loaded = loadFromLocal();
-        // Jika tidak ada data tersimpan, tetap kosong (tidak load default)
+        loadFromLocal();
         renderTable();
     }
 
