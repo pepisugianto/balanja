@@ -24,6 +24,8 @@
             --warning-dark: #ca8a04;
             --danger: #ef4444;
             --danger-dark: #dc2626;
+            --bought: #10b981;
+            --bought-bg: #ecfdf5;
             
             --bg: #f1f5f9;
             --card-bg: #ffffff;
@@ -79,8 +81,49 @@
             font-weight: 600;
             opacity: 0.9;
             text-align: right;
-            max-width: 120px;
+            max-width: 140px;
             line-height: 1.2;
+        }
+
+        /* === PROGRESS BAR HEADER === */
+        .progress-header {
+            background: white;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-header .progress-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-medium);
+            white-space: nowrap;
+        }
+
+        .progress-header .progress-track {
+            flex: 1;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-header .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--bought) 0%, var(--success) 100%);
+            border-radius: 999px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .progress-header .progress-count {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--bought);
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
         }
 
         /* === TOOLBAR COMPACT - SCROLLABLE === */
@@ -131,20 +174,15 @@
         .btn:active { transform: scale(0.95); }
 
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
         .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: var(--success-dark); }
         .btn-warning { background: var(--warning); color: white; }
-        .btn-warning:hover { background: var(--warning-dark); }
         .btn-danger { background: var(--danger); color: white; }
         .btn-excel { background: var(--excel); color: white; }
-        .btn-excel:hover { background: var(--excel-dark); }
         .btn-outline {
             background: white;
             color: var(--text-medium);
             border: 1px solid #cbd5e1;
         }
-        .btn-outline:hover { background: #f8fafc; }
 
         /* === MANUAL FORM COMPACT === */
         .manual-form {
@@ -215,12 +253,13 @@
             table-layout: fixed;
         }
 
-        col.c-no     { width: 26px; }
+        col.c-no     { width: 24px; }
+        col.c-check  { width: 30px; }
         col.c-name   { width: auto; }
-        col.c-qty    { width: 42px; }
-        col.c-price  { width: 62px; }
-        col.c-total  { width: 76px; }
-        col.c-action { width: 52px; }
+        col.c-qty    { width: 40px; }
+        col.c-price  { width: 58px; }
+        col.c-total  { width: 72px; }
+        col.c-action { width: 46px; }
 
         th, td {
             padding: 6px 3px;
@@ -243,7 +282,7 @@
             top: 0;
         }
 
-        tbody td:nth-child(2) {
+        tbody td:nth-child(3) {
             text-align: left;
             font-weight: 700;
             font-size: 11px;
@@ -260,6 +299,78 @@
         }
 
         tbody tr:active { background: #f8fafc; }
+
+        /* === ROW SUDAH DIBELI === */
+        tbody tr.bought {
+            background: var(--bought-bg);
+        }
+
+        tbody tr.bought td:nth-child(3) .item-name {
+            text-decoration: line-through;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        tbody tr.bought .input-trigger {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        tbody tr.bought .currency {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        /* === CHECKBOX TOGGLE === */
+        .check-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .check-toggle:active { transform: scale(0.9); }
+
+        .check-toggle .check-icon {
+            font-size: 12px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-weight: 900;
+        }
+
+        .check-toggle.checked {
+            background: var(--bought);
+            border-color: var(--bought);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+        }
+
+        .check-toggle.checked .check-icon {
+            opacity: 1;
+        }
+
+        /* === BADGE BELI === */
+        .badge-bought {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: 1px 5px;
+            background: var(--bought);
+            color: white;
+            border-radius: 999px;
+            font-size: 8px;
+            font-weight: 800;
+            margin-left: 4px;
+            vertical-align: middle;
+            letter-spacing: 0.3px;
+        }
 
         /* === INPUT TRIGGER COMPACT === */
         .input-trigger {
@@ -611,6 +722,7 @@
         .toast.success { background: var(--success-dark); }
         .toast.error { background: var(--danger); }
         .toast.info { background: var(--primary); }
+        .toast.bought { background: var(--bought); }
 
         /* === RESPONSIVE === */
         @media (max-width: 380px) {
@@ -619,7 +731,8 @@
             .btn { padding: 5px 7px; font-size: 10px; }
             th, td { padding: 5px 2px; }
             thead th { font-size: 8px; }
-            tbody td:nth-child(2) { font-size: 10px; }
+            tbody td:nth-child(3) { font-size: 10px; }
+            .check-toggle { width: 20px; height: 20px; }
         }
 
         /* Desktop view */
@@ -645,14 +758,19 @@
             .btn { padding: 8px 12px; font-size: 12px; }
             th, td { padding: 8px 6px; font-size: 12px; }
             thead th { font-size: 10px; padding: 8px 6px; }
-            tbody td:nth-child(2) { font-size: 12px; padding-left: 10px; }
+            tbody td:nth-child(3) { font-size: 12px; padding-left: 10px; }
             .input-trigger { padding: 4px 8px; font-size: 12px; min-width: 36px; }
             .currency { font-size: 12px; }
             .btn-action { font-size: 15px; padding: 5px 6px; }
+            .check-toggle { width: 24px; height: 24px; }
+            .check-toggle .check-icon { font-size: 14px; }
             .empty-state { padding: 50px 20px; }
             .empty-state .icon { font-size: 56px; }
             .empty-state .title { font-size: 16px; }
             .empty-state .subtitle { font-size: 13px; }
+            .progress-header { padding: 10px 20px; }
+            .progress-header .progress-label { font-size: 12px; }
+            .progress-header .progress-count { font-size: 12px; }
         }
     </style>
 </head>
@@ -666,6 +784,15 @@
             Estimasi Belanja
         </h1>
         <div class="header-info" id="lastSaved">Belum disimpan</div>
+    </div>
+
+    <!-- Progress Header -->
+    <div class="progress-header" id="progressHeader" style="display: none;">
+        <span class="progress-label">🛒 Progres Belanja</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-count" id="progressCount">0/0</span>
     </div>
 
     <!-- Toolbar Compact dengan Label -->
@@ -731,6 +858,7 @@
         <table id="priceTable">
             <colgroup>
                 <col class="c-no">
+                <col class="c-check">
                 <col class="c-name">
                 <col class="c-qty">
                 <col class="c-price">
@@ -740,6 +868,7 @@
             <thead>
                 <tr>
                     <th rowspan="2">#</th>
+                    <th rowspan="2">✓</th>
                     <th rowspan="2" style="text-align:left; padding-left:6px;">Nama Bahan</th>
                     <th rowspan="2">Qty</th>
                     <th colspan="2">Harga</th>
@@ -755,12 +884,12 @@
             </tbody>
             <tfoot>
                 <tr class="total-row">
-                    <td colspan="4" style="text-align: right; padding-right: 6px;">TOTAL</td>
+                    <td colspan="5" style="text-align: right; padding-right: 6px;">TOTAL</td>
                     <td id="grandTotal">Rp 0</td>
                     <td></td>
                 </tr>
                 <tr class="rab-row">
-                    <td colspan="4" style="text-align: right; padding-right: 6px;">
+                    <td colspan="5" style="text-align: right; padding-right: 6px;">
                         <i class="ti-wallet"></i> RAB
                     </td>
                     <td colspan="2" style="text-align: left; padding-left: 6px;">
@@ -771,7 +900,7 @@
                     </td>
                 </tr>
                 <tr class="selisih-row">
-                    <td colspan="4" style="text-align: right; padding-right: 6px;">
+                    <td colspan="5" style="text-align: right; padding-right: 6px;">
                         <i class="ti-stats-up"></i> SELISIH
                     </td>
                     <td colspan="2" style="text-align: left; padding-left: 6px;">
@@ -879,6 +1008,9 @@
     const confirmModal = document.getElementById('confirmModal');
     const toast = document.getElementById('toast');
     const lastSavedEl = document.getElementById('lastSaved');
+    const progressHeader = document.getElementById('progressHeader');
+    const progressFill = document.getElementById('progressFill');
+    const progressCount = document.getElementById('progressCount');
 
     // ==================== UTILITAS ====================
     function formatRupiah(angka) {
@@ -933,6 +1065,10 @@
             const savedRab = localStorage.getItem(STORAGE_RAB_KEY);
             if (saved) {
                 items = JSON.parse(saved);
+                // Pastikan semua item punya field `bought`
+                items.forEach(item => {
+                    if (item.bought === undefined) item.bought = false;
+                });
                 if (savedTime) lastSavedEl.textContent = '✓ ' + savedTime;
                 if (savedRab) {
                     rabValue = parseInt(savedRab) || 0;
@@ -946,6 +1082,22 @@
         return false;
     }
 
+    // ==================== PROGRESS ====================
+    function updateProgress() {
+        if (items.length === 0) {
+            progressHeader.style.display = 'none';
+            return;
+        }
+
+        progressHeader.style.display = 'flex';
+        const boughtCount = items.filter(item => item.bought).length;
+        const totalCount = items.length;
+        const percent = totalCount > 0 ? (boughtCount / totalCount) * 100 : 0;
+
+        progressFill.style.width = percent + '%';
+        progressCount.textContent = `${boughtCount}/${totalCount}`;
+    }
+
     // ==================== RENDER ====================
     function renderTable() {
         tableBody.innerHTML = "";
@@ -954,7 +1106,7 @@
         if (items.length === 0) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="padding: 0; border: none;">
+                    <td colspan="7" style="padding: 0; border: none;">
                         <div class="empty-state">
                             <div class="icon"><i class="ti-shopping-cart"></i></div>
                             <div class="title">Belum Ada Data</div>
@@ -968,6 +1120,7 @@
             `;
             grandTotalElement.textContent = formatRupiah(0);
             updateComparison(0);
+            updateProgress();
             return;
         }
 
@@ -976,11 +1129,22 @@
         items.forEach((item, index) => {
             const rowTotal = item.qty * item.price;
             grandTotal += rowTotal;
+            const isBought = item.bought === true;
 
             const tr = document.createElement("tr");
+            if (isBought) tr.classList.add('bought');
+
             tr.innerHTML = `
                 <td>${item.no}</td>
-                <td title="${item.name}">${item.name}</td>
+                <td>
+                    <div class="check-toggle ${isBought ? 'checked' : ''}" onclick="toggleBought(${index})" title="${isBought ? 'Batalkan' : 'Tandai sudah dibeli'}">
+                        <span class="check-icon">✓</span>
+                    </div>
+                </td>
+                <td title="${item.name}">
+                    <span class="item-name">${item.name}</span>
+                    ${isBought ? '<span class="badge-bought">✓ BELI</span>' : ''}
+                </td>
                 <td>
                     <span class="input-trigger" onclick="openModal(${index}, 'qty')">${item.qty}</span>
                 </td>
@@ -1000,6 +1164,25 @@
 
         grandTotalElement.textContent = formatRupiah(grandTotal);
         updateComparison(grandTotal);
+        updateProgress();
+    }
+
+    // ==================== TOGGLE BOUGHT ====================
+    function toggleBought(index) {
+        if (index === undefined || index === null) return;
+        
+        items[index].bought = !items[index].bought;
+        const isBought = items[index].bought;
+        const itemName = items[index].name;
+
+        renderTable();
+        saveToLocal(true);
+
+        if (isBought) {
+            showToast(`✓ "${itemName}" sudah dibeli`, 'bought');
+        } else {
+            showToast(`Batalkan "${itemName}"`, 'info');
+        }
     }
 
     // ==================== COMPARISON ====================
@@ -1272,7 +1455,7 @@
         if (!name) { showToast('Nama harus diisi', 'error'); return; }
 
         const newNo = items.length > 0 ? Math.max(...items.map(i => i.no)) + 1 : 1;
-        items.push({ no: newNo, name, qty, price });
+        items.push({ no: newNo, name, qty, price, bought: false });
 
         document.getElementById('newName').value = '';
         document.getElementById('newQty').value = '1';
@@ -1324,7 +1507,7 @@
 
                     if (name) {
                         maxNo++;
-                        newItems.push({ no: maxNo, name, qty: isNaN(qty) ? 1 : qty, price: isNaN(price) ? 0 : price });
+                        newItems.push({ no: maxNo, name, qty: isNaN(qty) ? 1 : qty, price: isNaN(price) ? 0 : price, bought: false });
                     }
                 });
 
@@ -1348,13 +1531,13 @@
     function exportExcel() {
         if (items.length === 0) { showToast('Tidak ada data', 'error'); return; }
 
-        const data = [["No", "Nama Bahan", "Jumlah", "Harga Satuan", "Harga Jumlah"]];
+        const data = [["No", "Nama Bahan", "Jumlah", "Harga Satuan", "Harga Jumlah", "Status"]];
         let grandTotal = 0;
 
         items.sort((a, b) => a.no - b.no).forEach(item => {
             const rowTotal = item.qty * item.price;
             grandTotal += rowTotal;
-            data.push([item.no, item.name, item.qty, item.price, rowTotal]);
+            data.push([item.no, item.name, item.qty, item.price, rowTotal, item.bought ? "SUDAH DIBELI" : "BELUM"]);
         });
 
         data.push(["", "", "", "TOTAL", grandTotal]);
@@ -1364,7 +1547,7 @@
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Estimasi");
-        ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 10 }, { wch: 15 }, { wch: 15 }];
+        ws['!cols'] = [{ wch: 5 }, { wch: 35 }, { wch: 10 }, { wch: 15 }, { wch: 15 }, { wch: 15 }];
 
         const dateStr = new Date().toISOString().slice(0, 10);
         XLSX.writeFile(wb, `Estimasi_${dateStr}.xlsx`);
@@ -1392,24 +1575,27 @@
         items.sort((a, b) => a.no - b.no).forEach(item => {
             const rowTotal = item.qty * item.price;
             grandTotal += rowTotal;
+            const status = item.bought ? '✓' : '-';
             body.push([
                 item.no, item.name, item.qty,
                 'Rp ' + formatNumber(item.price),
-                'Rp ' + formatNumber(rowTotal)
+                'Rp ' + formatNumber(rowTotal),
+                status
             ]);
         });
 
         const isOver = grandTotal > rabValue && rabValue > 0;
+        const boughtCount = items.filter(i => i.bought).length;
 
         doc.autoTable({
             startY: 32,
-            head: [['No', 'Nama Bahan', 'Qty', 'Harga', 'Jumlah']],
+            head: [['No', 'Nama Bahan', 'Qty', 'Harga', 'Jumlah', '✓']],
             body: body,
             foot: [
-                ['', '', '', 'TOTAL', 'Rp ' + formatNumber(grandTotal)],
-                ['', '', '', 'RAB', 'Rp ' + formatNumber(rabValue)],
-                ['', '', '', 'SELISIH', 'Rp ' + formatNumber(Math.abs(rabValue - grandTotal))],
-                ['', '', '', 'STATUS', isOver ? 'MELEBIHI' : 'AMAN']
+                ['', '', '', 'TOTAL', 'Rp ' + formatNumber(grandTotal), ''],
+                ['', '', '', 'RAB', 'Rp ' + formatNumber(rabValue), ''],
+                ['', '', '', 'SELISIH', 'Rp ' + formatNumber(Math.abs(rabValue - grandTotal)), ''],
+                ['', '', '', 'STATUS', isOver ? 'MELEBIHI' : 'AMAN', boughtCount + '/' + items.length]
             ],
             theme: 'grid',
             headStyles: { fillColor: [99, 102, 241], fontSize: 9, halign: 'center' },
@@ -1421,12 +1607,20 @@
             bodyStyles: { fontSize: 9 },
             columnStyles: {
                 0: { halign: 'center', cellWidth: 12 },
-                1: { cellWidth: 70 },
+                1: { cellWidth: 65 },
                 2: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'right', cellWidth: 35 },
-                4: { halign: 'right', cellWidth: 35 }
+                3: { halign: 'right', cellWidth: 30 },
+                4: { halign: 'right', cellWidth: 32 },
+                5: { halign: 'center', cellWidth: 12 }
             },
-            margin: { top: 32, left: 14, right: 14 }
+            margin: { top: 32, left: 14, right: 14 },
+            didParseCell: function(data) {
+                // Warnai baris yang sudah dibeli
+                if (data.section === 'body' && items[data.row.index] && items[data.row.index].bought) {
+                    data.cell.styles.fillColor = [236, 253, 245];
+                    data.cell.styles.textColor = [107, 114, 128];
+                }
+            }
         });
 
         const dateStr = new Date().toISOString().slice(0, 10);
