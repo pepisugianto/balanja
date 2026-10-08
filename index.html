@@ -39,23 +39,29 @@
 
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
+        html, body { 
+            height: 100%;
+            overflow: hidden;
+        }
+
         body { 
             background: var(--bg); 
-            min-height: 100vh;
             color: var(--text-dark);
             font-size: 12px;
             line-height: 1.4;
-            overflow-x: hidden;
         }
 
         .container {
             background: var(--card-bg);
             width: 100%;
             max-width: 100%;
-            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* === HEADER === */
+        /* === HEADER (STICKY) === */
         .header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
@@ -63,8 +69,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: sticky;
-            top: 0;
+            flex-shrink: 0;
             z-index: 100;
         }
 
@@ -87,7 +92,7 @@
             line-height: 1.2;
         }
 
-        /* === PROGRESS HEADER === */
+        /* === PROGRESS (STICKY) === */
         .progress-header {
             background: white;
             padding: 8px 12px;
@@ -95,6 +100,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-shrink: 0;
         }
 
         .progress-header .progress-label {
@@ -128,7 +134,7 @@
             white-space: nowrap;
         }
 
-        /* === TOOLBAR === */
+        /* === TOOLBAR (STICKY) === */
         .toolbar {
             display: flex;
             gap: 4px;
@@ -138,6 +144,7 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            flex-shrink: 0;
         }
 
         .toolbar::-webkit-scrollbar { display: none; }
@@ -195,6 +202,7 @@
             background: #fffbeb;
             border-bottom: 1px solid #fde68a;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .manual-form.show { display: flex; }
@@ -227,17 +235,18 @@
         /* === WARNING BANNER === */
         .warning-banner {
             display: none;
-            padding: 12px 14px;
+            padding: 8px 12px;
             background: #fef2f2;
             border-left: 6px solid var(--danger);
             border-bottom: 2px solid var(--danger);
             color: var(--danger-dark);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
             align-items: center;
             gap: 10px;
-            line-height: 1.4;
+            line-height: 1.3;
             box-shadow: 0 3px 8px rgba(239,68,68,0.15);
+            flex-shrink: 0;
         }
 
         .warning-banner.show { display: flex; }
@@ -251,7 +260,7 @@
         }
 
         .warning-banner .icon { 
-            font-size: 24px; 
+            font-size: 22px; 
             flex-shrink: 0;
             animation: shake 0.6s ease infinite;
         }
@@ -265,14 +274,14 @@
         .warning-banner .text-block {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .warning-banner .warning-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
         }
 
         .warning-banner .warning-subtitle {
@@ -281,11 +290,25 @@
             opacity: 0.85;
         }
 
+        /* ========================================= */
+        /* === SCROLLABLE AREA (TABEL SAJA) === */
+        /* ========================================= */
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
         /* === TABLE === */
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             background: white;
+            flex: 1;
         }
 
         table {
@@ -322,6 +345,7 @@
             border-bottom: 2px solid var(--primary);
             position: sticky;
             top: 0;
+            z-index: 10;
         }
 
         tbody td:nth-child(3) {
@@ -375,7 +399,6 @@
             background: white;
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
         }
 
         .check-toggle:active { transform: scale(0.9); }
@@ -468,34 +491,116 @@
 
         .btn-action:active { background: #f1f5f9; }
 
-        /* ========================================= */
-        /* === FOOTER ROWS === */
-        /* ========================================= */
-        
-        tfoot tr td {
-            padding: 8px 6px;
-            vertical-align: middle;
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            padding: 30px 16px;
+            color: var(--text-light);
         }
 
-        tfoot tr td.footer-label {
-            text-align: right;
-            padding-right: 10px;
-            width: 58%;
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            opacity: 0.3;
         }
 
-        tfoot tr td.footer-value {
-            text-align: left;
-            padding-left: 10px;
-            width: 42%;
+        .empty-state .title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-medium);
+            margin-bottom: 4px;
         }
 
-        .footer-label-text {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+        .empty-state .subtitle {
             font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        /* ========================================= */
+        /* === FOOTER (STICKY BAWAH, FULL WIDTH) === */
+        /* ========================================= */
+        .footer-sticky {
+            flex-shrink: 0;
+            background: white;
+            border-top: 2px solid var(--border);
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+            z-index: 50;
+        }
+
+        /* Grid layout footer - 4 kolom sejajar proporsional */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            font-size: 11px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        /* Baris total belanja */
+        .footer-grid.total-row {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-bottom: none;
+            padding: 6px 10px;
+        }
+
+        .footer-grid.total-row.error {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        }
+
+        .footer-grid.rab-row {
+            background: #fef3c7;
+        }
+
+        .footer-grid.pencairan-row {
+            background: #e0f2fe;
+        }
+
+        .footer-grid.sisa-row {
+            background: #f1f5f9;
+        }
+
+        .footer-grid.status-row {
+            background: #f8fafc;
+            padding: 6px 10px;
+        }
+
+        /* Kolom kiri: label */
+        .footer-grid .fg-label {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
             font-weight: 800;
             white-space: nowrap;
+            text-align: right;
+        }
+
+        /* Kolom tengah: badge (hanya untuk RAB & Pencairan) */
+        .footer-grid .fg-badge {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Kolom kanan: value */
+        .footer-grid .fg-value {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 5px;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        /* Saat tidak ada badge, value span 2 kolom */
+        .footer-grid.no-badge .fg-label {
+            grid-column: 1 / 3;
+        }
+
+        .footer-grid.no-badge .fg-value {
+            grid-column: 3 / 4;
         }
 
         /* === LABEL STATUS BADGE === */
@@ -504,15 +609,13 @@
             align-items: center;
             justify-content: center;
             gap: 3px;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 6px;
             font-size: 9px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            flex-shrink: 0;
-            min-width: 60px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            min-width: 58px;
             border: 1.5px solid transparent;
         }
 
@@ -544,31 +647,7 @@
 
         .label-status-badge i { font-size: 10px; }
 
-        /* === TOTAL ROW === */
-        tfoot tr.total-row {
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            transition: background 0.3s ease;
-        }
-
-        /* Total Belanja jadi merah jika error */
-        tfoot tr.total-row.error {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-        }
-
-        tfoot tr.total-row td {
-            font-weight: 800;
-            font-size: 11px;
-            color: var(--success-dark);
-            border-top: 2px solid var(--success);
-            border-bottom: none;
-            transition: color 0.3s ease;
-        }
-
-        tfoot tr.total-row.error td {
-            color: var(--danger-dark);
-            border-top-color: var(--danger);
-        }
-
+        /* === TOTAL VALUE === */
         #grandTotal {
             font-size: 13px;
             color: var(--danger);
@@ -576,18 +655,10 @@
             font-weight: 800;
         }
 
-        /* === RAB ROW === */
-        tfoot tr.rab-row {
-            background: #fef3c7;
-        }
+        .total-row.error .fg-label { color: var(--danger-dark); }
+        .total-row:not(.error) .fg-label { color: var(--success-dark); }
 
-        tfoot tr.rab-row td {
-            font-weight: 800;
-            font-size: 11px;
-            color: var(--warning-dark);
-            border-bottom: none;
-        }
-
+        /* === RAB / PENCAIRAN INPUT === */
         .rab-input-wrapper {
             display: inline-flex;
             align-items: center;
@@ -595,7 +666,7 @@
             background: white;
             border: 1.5px solid #fcd34d;
             border-radius: 6px;
-            padding: 3px 6px;
+            padding: 2px 6px;
         }
 
         .rab-input-wrapper .prefix {
@@ -612,22 +683,10 @@
             font-weight: 800;
             color: var(--warning-dark);
             font-family: 'Courier New', monospace;
-            width: 65px;
+            width: 70px;
             text-align: right;
             background: transparent;
-            padding: 0;
-        }
-
-        /* === PENCAIRAN ROW === */
-        tfoot tr.pencairan-row {
-            background: #e0f2fe;
-        }
-
-        tfoot tr.pencairan-row td {
-            font-weight: 800;
-            font-size: 11px;
-            color: var(--info-dark);
-            border-bottom: none;
+            padding: 2px 0;
         }
 
         .pencairan-input-wrapper {
@@ -637,7 +696,7 @@
             background: white;
             border: 1.5px solid #7dd3fc;
             border-radius: 6px;
-            padding: 3px 6px;
+            padding: 2px 6px;
         }
 
         .pencairan-input-wrapper .prefix {
@@ -654,24 +713,13 @@
             font-weight: 800;
             color: var(--info-dark);
             font-family: 'Courier New', monospace;
-            width: 65px;
+            width: 70px;
             text-align: right;
             background: transparent;
-            padding: 0;
+            padding: 2px 0;
         }
 
-        /* === SISA RAB ROW === */
-        tfoot tr.sisa-row {
-            background: #f1f5f9;
-        }
-
-        tfoot tr.sisa-row td {
-            font-weight: 800;
-            font-size: 11px;
-            color: var(--text-medium);
-            border-bottom: none;
-        }
-
+        /* === SISA RAB === */
         #sisaRab {
             font-size: 12px;
             font-family: 'Courier New', monospace;
@@ -681,35 +729,24 @@
 
         #sisaRab.negatif { color: var(--danger); }
 
-        /* === STATUS ROW === */
-        tfoot tr.status-row {
-            background: #f8fafc;
-        }
-
-        tfoot tr.status-row td {
-            font-weight: 700;
-            font-size: 10px;
-            color: var(--text-medium);
-            border-bottom: 1px solid var(--border);
-            border-top: 2px solid var(--border);
-        }
+        .sisa-row .fg-label { color: var(--text-medium); }
 
         /* === STATUS BADGE UTAMA === */
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 6px 14px;
+            gap: 4px;
+            padding: 5px 12px;
             border-radius: 999px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.5px;
             border: 2px solid transparent;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
 
-        .status-badge i { font-size: 13px; }
+        .status-badge i { font-size: 12px; }
 
         .status-badge.aman { 
             background: #dcfce7; 
@@ -722,7 +759,7 @@
             color: var(--danger-dark);
             border-color: var(--danger);
             animation: pulse 1.2s ease-in-out infinite;
-            box-shadow: 0 3px 12px rgba(239,68,68,0.3);
+            box-shadow: 0 2px 10px rgba(239,68,68,0.3);
         }
 
         .status-badge.kurang {
@@ -730,7 +767,7 @@
             color: var(--danger-dark);
             border-color: var(--danger);
             animation: pulse 1.2s ease-in-out infinite;
-            box-shadow: 0 3px 12px rgba(239,68,68,0.3);
+            box-shadow: 0 2px 10px rgba(239,68,68,0.3);
         }
 
         .status-badge.belum {
@@ -741,33 +778,7 @@
 
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.75; transform: scale(1.03); }
-        }
-
-        /* === EMPTY STATE === */
-        .empty-state {
-            text-align: center;
-            padding: 30px 16px;
-            color: var(--text-light);
-        }
-
-        .empty-state .icon {
-            font-size: 40px;
-            margin-bottom: 8px;
-            opacity: 0.3;
-        }
-
-        .empty-state .title {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--text-medium);
-            margin-bottom: 4px;
-        }
-
-        .empty-state .subtitle {
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 12px;
+            50% { opacity: 0.75; transform: scale(1.02); }
         }
 
         /* === MODAL === */
@@ -941,13 +952,17 @@
             thead th { font-size: 8px; }
             tbody td:nth-child(3) { font-size: 10px; }
             .check-toggle { width: 20px; height: 20px; }
-            #rabInput, #pencairanInput { width: 55px; font-size: 10px; }
-            .footer-label-text { font-size: 10px; }
-            .label-status-badge { font-size: 8px; padding: 3px 6px; min-width: 50px; }
+            #rabInput, #pencairanInput { width: 60px; font-size: 10px; }
+            .footer-grid { font-size: 10px; padding: 4px 8px; gap: 4px; }
+            .footer-grid.total-row { padding: 5px 8px; }
+            .footer-grid.status-row { padding: 5px 8px; }
+            .label-status-badge { font-size: 8px; padding: 2px 6px; min-width: 48px; }
             .label-status-badge i { font-size: 9px; }
-            .status-badge { font-size: 10px; padding: 5px 10px; }
+            .status-badge { font-size: 9px; padding: 4px 10px; }
+            #grandTotal { font-size: 12px; }
         }
 
+        /* Desktop view - tetap menggunakan layout flex full-height */
         @media (min-width: 768px) {
             body { 
                 display: flex; 
@@ -957,7 +972,7 @@
             }
             .container {
                 max-width: 900px;
-                min-height: auto;
+                height: calc(100vh - 40px);
                 border-radius: 12px;
                 overflow: hidden;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -984,11 +999,13 @@
             .progress-header .progress-label { font-size: 12px; }
             .progress-header .progress-count { font-size: 12px; }
             #rabInput, #pencairanInput { width: 90px; font-size: 12px; }
-            .footer-label-text { font-size: 12px; }
-            .label-status-badge { font-size: 10px; padding: 5px 10px; min-width: 70px; }
+            .footer-grid { font-size: 12px; padding: 6px 16px; gap: 8px; }
+            .footer-grid.total-row { padding: 8px 16px; }
+            .footer-grid.status-row { padding: 8px 16px; }
+            .label-status-badge { font-size: 10px; padding: 4px 10px; min-width: 70px; }
             .label-status-badge i { font-size: 11px; }
-            .status-badge { font-size: 12px; padding: 7px 16px; }
-            .status-badge i { font-size: 14px; }
+            .status-badge { font-size: 11px; padding: 6px 14px; }
+            #grandTotal { font-size: 14px; }
         }
     </style>
 </head>
@@ -1069,110 +1086,111 @@
         </div>
     </div>
 
-    <!-- Table -->
-    <div class="table-wrapper">
-        <table id="priceTable">
-            <colgroup>
-                <col class="c-no">
-                <col class="c-check">
-                <col class="c-name">
-                <col class="c-qty">
-                <col class="c-price">
-                <col class="c-total">
-                <col class="c-action">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th rowspan="2">#</th>
-                    <th rowspan="2">✓</th>
-                    <th rowspan="2" style="text-align:left; padding-left:6px;">Nama Bahan</th>
-                    <th rowspan="2">Qty</th>
-                    <th colspan="2">Harga</th>
-                    <th rowspan="2">Aksi</th>
-                </tr>
-                <tr>
-                    <th>Satuan</th>
-                    <th>Jumlah</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- Data diisi JavaScript -->
-            </tbody>
-            <tfoot>
-                <!-- TOTAL BELANJA (warna dinamis) -->
-                <tr class="total-row" id="totalRow">
-                    <td colspan="4" class="footer-label">
-                        <span class="footer-label-text" style="color: inherit;">
-                            TOTAL BELANJA
-                        </span>
-                    </td>
-                    <td id="grandTotal" class="footer-value">Rp 0</td>
-                    <td></td>
-                </tr>
-                
-                <!-- RAB (dengan badge status kiri) -->
-                <tr class="rab-row">
-                    <td colspan="4" class="footer-label">
-                        <span class="footer-label-text" style="color: var(--warning-dark);">
-                            <span class="label-status-badge info" id="rabStatusBadge">
-                                <i class="ti-info-alt"></i> —
-                            </span>
-                            <i class="ti-wallet"></i> RAB
-                        </span>
-                    </td>
-                    <td colspan="2" class="footer-value">
-                        <div class="rab-input-wrapper">
-                            <span class="prefix">Rp</span>
-                            <input type="text" id="rabInput" inputmode="numeric" placeholder="0" value="0">
-                        </div>
-                    </td>
-                </tr>
-                
-                <!-- PENCAIRAN (dengan badge status kiri) -->
-                <tr class="pencairan-row">
-                    <td colspan="4" class="footer-label">
-                        <span class="footer-label-text" style="color: var(--info-dark);">
-                            <span class="label-status-badge info" id="pencairanStatusBadge">
-                                <i class="ti-info-alt"></i> —
-                            </span>
-                            <i class="ti-money"></i> PENCAIRAN
-                        </span>
-                    </td>
-                    <td colspan="2" class="footer-value">
-                        <div class="pencairan-input-wrapper">
-                            <span class="prefix">Rp</span>
-                            <input type="text" id="pencairanInput" inputmode="numeric" placeholder="0" value="0">
-                        </div>
-                    </td>
-                </tr>
-                
-                <!-- SISA RAB -->
-                <tr class="sisa-row">
-                    <td colspan="4" class="footer-label">
-                        <span class="footer-label-text">
-                            <i class="ti-stats-down"></i> SISA RAB
-                        </span>
-                    </td>
-                    <td colspan="2" class="footer-value">
-                        <span id="sisaRab">Rp 0</span>
-                    </td>
-                </tr>
-                
-                <!-- STATUS -->
-                <tr class="status-row">
-                    <td colspan="4" class="footer-label">
-                        <span class="footer-label-text">
-                            <i class="ti-info-alt"></i> STATUS
-                        </span>
-                    </td>
-                    <td colspan="2" class="footer-value">
-                        <span id="statusBadge" class="status-badge belum">
-                            <i class="ti-info-alt"></i> BELUM DISET
-                        </span>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+    <!-- SCROLL AREA: HANYA TABEL YANG SCROLL -->
+    <div class="scroll-area">
+        <div class="table-wrapper">
+            <table id="priceTable">
+                <colgroup>
+                    <col class="c-no">
+                    <col class="c-check">
+                    <col class="c-name">
+                    <col class="c-qty">
+                    <col class="c-price">
+                    <col class="c-total">
+                    <col class="c-action">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th rowspan="2">#</th>
+                        <th rowspan="2">✓</th>
+                        <th rowspan="2" style="text-align:left; padding-left:6px;">Nama Bahan</th>
+                        <th rowspan="2">Qty</th>
+                        <th colspan="2">Harga</th>
+                        <th rowspan="2">Aksi</th>
+                    </tr>
+                    <tr>
+                        <th>Satuan</th>
+                        <th>Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data diisi JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FOOTER STICKY: FULL WIDTH, TIDAK SCROLL -->
+    <div class="footer-sticky">
+        
+        <!-- TOTAL BELANJA -->
+        <div class="footer-grid total-row no-badge" id="totalRow">
+            <div class="fg-label">
+                TOTAL BELANJA
+            </div>
+            <div class="fg-value">
+                <span id="grandTotal">Rp 0</span>
+            </div>
+        </div>
+        
+        <!-- RAB -->
+        <div class="footer-grid rab-row">
+            <div class="fg-label" style="color: var(--warning-dark);">
+                <i class="ti-wallet"></i> RAB
+            </div>
+            <div class="fg-badge">
+                <span class="label-status-badge info" id="rabStatusBadge">
+                    <i class="ti-info-alt"></i> —
+                </span>
+            </div>
+            <div class="fg-value">
+                <div class="rab-input-wrapper">
+                    <span class="prefix">Rp</span>
+                    <input type="text" id="rabInput" inputmode="numeric" placeholder="0" value="0">
+                </div>
+            </div>
+        </div>
+        
+        <!-- PENCAIRAN -->
+        <div class="footer-grid pencairan-row">
+            <div class="fg-label" style="color: var(--info-dark);">
+                <i class="ti-money"></i> PENCAIRAN
+            </div>
+            <div class="fg-badge">
+                <span class="label-status-badge info" id="pencairanStatusBadge">
+                    <i class="ti-info-alt"></i> —
+                </span>
+            </div>
+            <div class="fg-value">
+                <div class="pencairan-input-wrapper">
+                    <span class="prefix">Rp</span>
+                    <input type="text" id="pencairanInput" inputmode="numeric" placeholder="0" value="0">
+                </div>
+            </div>
+        </div>
+        
+        <!-- SISA RAB -->
+        <div class="footer-grid sisa-row no-badge">
+            <div class="fg-label">
+                <i class="ti-stats-down"></i> SISA RAB
+            </div>
+            <div class="fg-value">
+                <span id="sisaRab">Rp 0</span>
+            </div>
+        </div>
+        
+        <!-- STATUS -->
+        <div class="footer-grid status-row no-badge">
+            <div class="fg-label">
+                <i class="ti-info-alt"></i> STATUS
+            </div>
+            <div class="fg-value">
+                <span id="statusBadge" class="status-badge belum">
+                    <i class="ti-info-alt"></i> BELUM DISET
+                </span>
+            </div>
+        </div>
+        
     </div>
 </div>
 
@@ -1461,7 +1479,6 @@
 
     // ==================== COMPARISON LOGIC ====================
     function updateComparison(grandTotal) {
-        // Hitung sisa RAB
         const sisa = rabValue - grandTotal;
         sisaRab.textContent = formatRupiah(Math.abs(sisa));
         
@@ -1471,51 +1488,43 @@
             sisaRab.classList.remove('negatif');
         }
 
-        // Cek kondisi
         const hasRAB = rabValue > 0;
         const hasPencairan = pencairanValue > 0;
         const isOverRAB = hasRAB && grandTotal > rabValue;
         const isUnderPencairan = hasPencairan && grandTotal < pencairanValue;
 
-        // ==================== TOTAL ROW COLOR ====================
-        // Merah jika ada error di RAB atau Pencairan
+        // === TOTAL ROW COLOR ===
         if (isOverRAB || isUnderPencairan) {
             totalRow.classList.add('error');
         } else {
             totalRow.classList.remove('error');
         }
 
-        // ==================== RAB STATUS BADGE ====================
+        // === RAB STATUS BADGE ===
         if (!hasRAB) {
             rabStatusBadge.className = 'label-status-badge info';
             rabStatusBadge.innerHTML = '<i class="ti-info-alt"></i> —';
         } else if (isOverRAB) {
-            // MERAH jika total belanja melebihi RAB
             rabStatusBadge.className = 'label-status-badge err';
             rabStatusBadge.innerHTML = '<i class="ti-alert"></i> LEBIH';
         } else {
-            // Hijau jika aman
             rabStatusBadge.className = 'label-status-badge ok';
             rabStatusBadge.innerHTML = '<i class="ti-check"></i> OK';
         }
 
-        // ==================== PENCAIRAN STATUS BADGE ====================
+        // === PENCAIRAN STATUS BADGE ===
         if (!hasPencairan) {
             pencairanStatusBadge.className = 'label-status-badge info';
             pencairanStatusBadge.innerHTML = '<i class="ti-info-alt"></i> —';
         } else if (isUnderPencairan) {
-            // MERAH jika total belanja kurang dari pencairan
             pencairanStatusBadge.className = 'label-status-badge err';
             pencairanStatusBadge.innerHTML = '<i class="ti-alert"></i> KURANG';
         } else {
-            // Hijau jika aman
             pencairanStatusBadge.className = 'label-status-badge ok';
             pencairanStatusBadge.innerHTML = '<i class="ti-check"></i> OK';
         }
 
-        // ==================== STATUS UTAMA ====================
-        
-        // KONDISI 1: Belum set RAB
+        // === STATUS UTAMA ===
         if (!hasRAB) {
             statusBadge.className = 'status-badge belum';
             statusBadge.innerHTML = '<i class="ti-info-alt"></i> BELUM DISET';
@@ -1524,14 +1533,13 @@
             return;
         }
 
-        // KONDISI 2: Belanja MELEBIHI RAB
         if (isOverRAB) {
             statusBadge.className = 'status-badge lebih';
             statusBadge.innerHTML = '<i class="ti-alert"></i> LEBIH';
             warningBanner.classList.add('show');
             warningBanner.classList.remove('warn');
             warningTitle.textContent = '⚠️ ANGGARAN TERLAMPAUI!';
-            warningText.textContent = 'Total belanja melebihi RAB. Segera tinjau kembali!';
+            warningText.textContent = 'Total belanja melebihi RAB.';
             
             if (lastWarningState !== 'over') {
                 showToast('Total belanja melebihi RAB!', 'error');
@@ -1540,7 +1548,6 @@
             return;
         }
 
-        // KONDISI 3: Belanja KURANG DARI PENCAIRAN
         if (isUnderPencairan) {
             statusBadge.className = 'status-badge kurang';
             statusBadge.innerHTML = '<i class="ti-alert"></i> KURANG';
@@ -1555,7 +1562,6 @@
             return;
         }
 
-        // KONDISI 4: AMAN
         statusBadge.className = 'status-badge aman';
         statusBadge.innerHTML = '<i class="ti-check"></i> AMAN';
         warningBanner.classList.remove('show', 'warn');
